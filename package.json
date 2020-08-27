@@ -22,6 +22,7 @@
 		"@types/styled-components": "^5.1.0",
 		"@types/styled-system": "^5.1.9",
 		"@types/styled-system__theme-get": "^5.0.0",
+		"antd": "^4.6.1",
 		"lodash": "^4.17.19",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
