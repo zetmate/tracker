@@ -6,6 +6,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { paths } from './routes';
 import { WithHeader } from './components';
+import Login from './routes/Login';
+
 import {
 	ScreenContextValue,
 	ScreenContext,
@@ -37,7 +39,7 @@ const App: React.FC = React.memo(() => {
 						<Route
 							exact
 							path={ paths.login }
-							component={ () => <div>Login</div> }
+							component={ Login }
 						/>
 						<Route
 							exact
