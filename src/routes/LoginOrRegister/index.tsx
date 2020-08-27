@@ -1,19 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-
-import { Form, Input, Button, Typography } from 'antd';
-import { FlexCenter, FlexColumnBetween } from '../../components/layout';
 import { useHistory } from 'react-router';
+
+import { Form, Input, Button, Typography, message } from 'antd';
+import { FlexCenter, FlexColumnBetween } from '../../components/layout';
 import paths from '../paths';
+import { api } from '../../config';
+import { AuthData } from '../../api/auth';
 
 // Types
 export type LoginFormProps = {
 	isNewUser: boolean;
-}
-
-type LoginFormData = {
-	username: string;
-	password: string;
 }
 
 // Validation
@@ -63,10 +60,22 @@ const passwordRulesRegister = [
  */
 const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 	const history = useHistory();
+	const [isPending, setIsPending] = useState<boolean>(false);
 
-	const onFinish = useCallback((args: LoginFormData) => (
-		console.log(args)
-	), []);
+	const onFinish = useCallback((data: AuthData) => {
+		setIsPending(true);
+
+		if (isNewUser) {
+			// TODO: create user there
+		} else {
+			api.login(data)
+				.then(
+					() => history.replace(paths.dashboard),
+					() => message.error('Something went wrong'),
+				)
+			;
+		}
+	}, [history, isNewUser]);
 
 	const greetingText = useMemo(() => (
 		isNewUser
@@ -128,6 +137,7 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 							type="primary"
 							htmlType="submit"
 							block
+							loading={ isPending }
 						>
 							{ submitBtnText }
 						</Submit>
