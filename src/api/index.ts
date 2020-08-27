@@ -11,7 +11,7 @@ export type RequestConfig = {
 }
 
 export interface IApi {
-	request: (config: RequestConfig) => Promise<Response<any>>;
+	request: (config: RequestConfig) => Promise<Response>;
 }
 
 const notFound = () => Promise.reject({ status: 404 });

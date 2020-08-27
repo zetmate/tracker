@@ -5,8 +5,7 @@ import { useHistory } from 'react-router';
 import { Form, Input, Button, Typography, message } from 'antd';
 import { FlexCenter, FlexColumnBetween } from '../../components/layout';
 import paths from '../paths';
-import { api } from '../../config';
-import { AuthData } from '../../api/auth';
+import { api, AuthData } from '../../config';
 
 // Types
 export type LoginFormProps = {

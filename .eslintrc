@@ -71,7 +71,8 @@
 				"commentPattern": "break[\\s\\w]*omitted"
 			}
 		],
-		"no-unused-vars": "off", // NB: need to turn it off to enable TS rule
+		"no-unused-vars": "off",
+		// NB: need to turn it off to enable TS rule
 
 		// React
 		"react/prop-types": 0,
@@ -83,6 +84,7 @@
 		"@typescript-eslint/no-unused-vars": [
 			"error"
 		],
-		"@typescript-eslint/no-explicit-any": 0
+		"@typescript-eslint/no-explicit-any": 0,
+		"@typescript-eslint/explicit-module-boundary-types": 0
 	}
 }
