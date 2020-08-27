@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { useMediaQuery } from 'react-responsive';
-import { Redirect, Route, Switch } from 'react-router';
+import { Redirect, Route, RouteProps, Switch } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { paths } from './routes';
 import { WithHeader } from './components';
-import Login from './routes/Login';
+import LoginForm from './routes/LoginOrRegister';
 
 import {
 	ScreenContextValue,
@@ -26,6 +26,10 @@ const App: React.FC = React.memo(() => {
 		<Redirect to={ paths.login } />
 	), []);
 
+	const Register = useCallback((props: RouteProps) => (
+		<LoginForm { ...props } isNewUser />
+	), []);
+
 	return (
 		<Router>
 			<ScreenContext.Provider value={ screenInfo }>
@@ -39,12 +43,12 @@ const App: React.FC = React.memo(() => {
 						<Route
 							exact
 							path={ paths.login }
-							component={ Login }
+							component={ LoginForm }
 						/>
 						<Route
 							exact
 							path={ paths.register }
-							component={ () => <div>Register</div> }
+							component={ Register }
 						/>
 						<Route
 							exact
