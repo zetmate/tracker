@@ -72,7 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 							New user with name ${ data.username } 
 							has been created`,
 						);
-						setIsPending(false);
+						history.replace(paths.dashboard);
 					},
 					() => {
 						message.error('Can not create a user');
