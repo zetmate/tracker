@@ -66,14 +66,14 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 
 		if (isNewUser) {
 			// TODO: create user there
-		} else {
-			api.login(data)
-				.then(
-					() => history.replace(paths.dashboard),
-					() => message.error('Something went wrong'),
-				)
-			;
+			return;
 		}
+		api.login(data)
+			.then(
+				() => history.replace(paths.dashboard),
+				() => message.error('Something went wrong'),
+			)
+		;
 	}, [history, isNewUser]);
 
 	const greetingText = useMemo(() => (
