@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { UrlParams, Response, Method } from './common';
 import { authService } from './auth';
+import { usersService } from './users';
 
 export type RequestConfig = {
 	urlParams?: UrlParams,
@@ -38,6 +39,7 @@ class API implements IApi {
 
 	private services = new Map([
 		['/oauth', authService],
+		['/users', usersService],
 	]);
 }
 
