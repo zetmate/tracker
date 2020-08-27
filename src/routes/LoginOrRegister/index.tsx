@@ -65,7 +65,20 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 		setIsPending(true);
 
 		if (isNewUser) {
-			// TODO: create user there
+			api.signUp(data)
+				.then(
+					() => {
+						message.success(`
+							New user with name ${ data.username } 
+							has been created`,
+						);
+						setIsPending(false);
+					},
+					() => {
+						message.error('Can not create a user');
+						setIsPending(false);
+					},
+				);
 			return;
 		}
 		api.login(data)
