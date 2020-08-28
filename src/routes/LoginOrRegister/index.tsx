@@ -70,7 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 					() => {
 						message.success(`
 							New user with name ${ data.username } 
-							has been created`,
+							has been created`, 3,
 						);
 						history.replace(paths.dashboard);
 					},
