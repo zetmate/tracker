@@ -33,6 +33,8 @@
 		"react-router": "^5.2.0",
 		"react-router-dom": "^5.2.0",
 		"react-spinners": "^0.9.0",
+		"redux": "^4.0.5",
+		"redux-thunk": "^2.3.0",
 		"styled-components": "^5.1.1",
 		"styled-system": "^5.1.5"
 	},
@@ -43,6 +45,8 @@
 		"@types/localforage": "^0.0.34",
 		"@types/react": "^16.9.36",
 		"@types/react-dom": "^16.9.8",
+		"@types/redux": "^3.6.0",
+		"@types/redux-thunk": "^2.1.0",
 		"@types/webpack": "^4.41.17",
 		"@typescript-eslint/eslint-plugin": "^3.2.0",
 		"@typescript-eslint/parser": "^3.2.0",
