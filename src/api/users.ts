@@ -1,4 +1,5 @@
 import { Service, methodNotAllowed, UrlParams, Request } from './common';
+import { db } from '../db';
 
 export const usersService: Service = {
 	'/': {
@@ -13,10 +14,14 @@ export const usersService: Service = {
 			});
 		},
 
-		// TODO: implement me
 		'GET'() {
-			console.error('[usersService]: /users GET is not implemented');
-			return Promise.reject();
+			return db.getUsersData()
+				.then(
+					(usersData) => ({
+						status: 200,
+						data: usersData,
+					}),
+				);
 		},
 		'PATCH': methodNotAllowed,
 		'PUT': methodNotAllowed,

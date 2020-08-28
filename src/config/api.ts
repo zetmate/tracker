@@ -1,5 +1,5 @@
-import API from '../api';
-import { AuthData } from '../db';
+import API, { Response } from '../api';
+import { AuthData, UsersData } from '../db';
 
 const server = new API();
 
@@ -23,5 +23,17 @@ export const api = {
 			method: 'POST',
 			data,
 		});
+	},
+
+	fetchUsersData(): Promise<UsersData> {
+		return server
+			.request({
+				servicePath: usersServicePath,
+				url: '/',
+				method: 'GET',
+			})
+			.then((response: Response) => (
+				response.data
+			));
 	},
 };
