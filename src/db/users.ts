@@ -41,7 +41,15 @@ const generateUsersData = (): UsersData => {
 		total.unproductiveTime += unproductiveTime;
 	}
 
-	return { content: users, total };
+	return {
+		content: users,
+		total: {
+			...total,
+			clockedTime: toFixedNumber(total.clockedTime, 1),
+			productiveTime: toFixedNumber(total.productiveTime, 1),
+			unproductiveTime: toFixedNumber(total.unproductiveTime, 1),
+		},
+	};
 };
 
 const usersData = generateUsersData();
