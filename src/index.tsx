@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Redirect, Route, RouteProps, Switch } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { paths } from './routes';
-import { WithHeader } from './components';
+import { WithHeader, WithLoader } from './components';
 import LoginForm from './routes/LoginOrRegister';
 
 import {
@@ -13,9 +13,27 @@ import {
 	ScreenContext,
 } from './context';
 
+import { initDb } from './db';
+import { message } from 'antd';
+
 const App: React.FC = React.memo(() => {
+	// Init db before rendering anything
+	const [isDbReady, setIsDbReady] = useState<boolean>(false);
+
 	const isMobile = useMediaQuery({ query: '(max-device-width: 860px)' });
 	const isVertical = useMediaQuery({ orientation: 'portrait' });
+
+	useEffect(() => {
+		initDb()
+			.then(
+				() => {
+					setTimeout(() => setIsDbReady(true), 500);
+				},
+				() => {
+					message.error('Database initialization failed!', 6);
+				},
+			);
+	}, []);
 
 	const screenInfo: ScreenContextValue = useMemo(() => ({
 		isMobile,
@@ -33,30 +51,32 @@ const App: React.FC = React.memo(() => {
 	return (
 		<Router>
 			<ScreenContext.Provider value={ screenInfo }>
-				<WithHeader shouldHideHeader>
-					<Switch>
-						<Route
-							exact
-							path={ paths.index }
-							component={ IndexRedirect }
-						/>
-						<Route
-							exact
-							path={ paths.login }
-							component={ LoginForm }
-						/>
-						<Route
-							exact
-							path={ paths.register }
-							component={ Register }
-						/>
-						<Route
-							exact
-							path={ paths.dashboard }
-							component={ () => <div>Dashboard</div> }
-						/>
-					</Switch>
-				</WithHeader>
+				<WithLoader isLoading={ !isDbReady }>
+					<WithHeader shouldHideHeader>
+						<Switch>
+							<Route
+								exact
+								path={ paths.index }
+								component={ IndexRedirect }
+							/>
+							<Route
+								exact
+								path={ paths.login }
+								component={ LoginForm }
+							/>
+							<Route
+								exact
+								path={ paths.register }
+								component={ Register }
+							/>
+							<Route
+								exact
+								path={ paths.dashboard }
+								component={ () => <div>Dashboard</div> }
+							/>
+						</Switch>
+					</WithHeader>
+				</WithLoader>
 			</ScreenContext.Provider>
 		</Router>
 	);

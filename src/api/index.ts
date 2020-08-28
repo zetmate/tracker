@@ -3,6 +3,8 @@ import { UrlParams, Response, Method } from './common';
 import { authService } from './auth';
 import { usersService } from './users';
 
+export { Response };
+
 export type RequestConfig = {
 	urlParams?: UrlParams,
 	method: Method,
