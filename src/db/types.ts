@@ -4,6 +4,7 @@ export type AuthData = {
 }
 
 export type UserData = {
+	key: number,
 	name: string;
 	totalTime: number,
 	productiveTime: number,

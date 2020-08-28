@@ -26,6 +26,7 @@ const generateUsersData = (): UsersData => {
 		const totalTime = productiveTime + unproductiveTime;
 
 		users.push({
+			key: i,
 			name: faker.name.findName(),
 			productiveTime,
 			unproductiveTime,
