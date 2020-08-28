@@ -1,11 +1,7 @@
 import API from '../api';
+import { AuthData } from '../db';
 
 const server = new API();
-
-export type AuthData = {
-	username: string;
-	password: string;
-}
 
 const authServicePath = '/oauth';
 const usersServicePath = '/users';
