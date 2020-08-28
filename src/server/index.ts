@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import { UrlParams, Response, Method } from './common';
-import { authService } from './auth';
-import { usersService } from './users';
+import { UrlParams, Response, Method, Service } from './common';
+import * as services from './services';
 
 export { Response };
 
@@ -13,14 +12,14 @@ export type RequestConfig = {
 	data?: any,
 }
 
-export interface IApi {
+export interface IServer {
 	request: (config: RequestConfig) => Promise<Response>;
 }
 
 const notFound = () => Promise.reject({ status: 404 });
 
-class API implements IApi {
-	request(config: RequestConfig): ReturnType<IApi['request']> {
+class Server implements IServer {
+	request(config: RequestConfig): ReturnType<IServer['request']> {
 		const { servicePath, url, method, data, urlParams } = config;
 
 		const service = this.services.get(servicePath);
@@ -29,7 +28,7 @@ class API implements IApi {
 		}
 
 		const requestService = (
-			_.get(service[url], method)
+			_.get(service.api[url], method)
 		);
 
 		if (!_.isFunction(requestService)) {
@@ -39,10 +38,12 @@ class API implements IApi {
 		return requestService(urlParams, data);
 	}
 
-	private services = new Map([
-		['/oauth', authService],
-		['/users', usersService],
-	]);
+	private services = new Map<string, Service>(
+		_.map(services, service => (
+			[service.baseUrl, service]
+		)),
+	);
 }
 
-export default API;
+const server = new Server();
+export default server;
