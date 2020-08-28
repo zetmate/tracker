@@ -1,0 +1,38 @@
+import { AuthData } from '../../db';
+import { Dispatch } from 'react';
+import server from '../../server';
+import { AsyncAction } from '../../utils';
+import { getAsyncActionCreator } from './common';
+
+const servicePath = '/oauth';
+
+export const LOGIN = 'LOGIN';
+
+const _login = getAsyncActionCreator(LOGIN);
+
+const login = (data: AuthData) => {
+	return (dispatch: Dispatch<AsyncAction>) => {
+		// Set pending
+		dispatch(_login({ state: 'pending' }));
+
+		// Request data
+		return server
+			.request({
+				servicePath,
+				url: '/authenticate',
+				method: 'POST',
+				data,
+			})
+			.then(
+				() => dispatch(_login({ state: 'success' })),
+				() => dispatch(_login({
+					state: 'error',
+					msg: 'Authorization failed',
+				})),
+			);
+	};
+};
+
+export default {
+	login,
+};
