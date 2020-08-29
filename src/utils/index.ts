@@ -1,4 +1,6 @@
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { Form } from 'antd';
 
 export type AsyncState = {
 	state: 'initial' | 'pending' | 'success' | 'error',
@@ -19,3 +21,7 @@ type AsyncDispatch<T>
 export function useAsyncDispatch<T>(): AsyncDispatch<T> {
 	return useDispatch();
 }
+
+export const FormItemNoMargin = styled(Form.Item)`
+	margin: 0 !important;
+`;
