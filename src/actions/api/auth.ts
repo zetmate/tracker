@@ -2,7 +2,7 @@ import { AuthData } from '../../db';
 import { Dispatch } from 'react';
 import server from '../../server';
 import { AsyncAction } from '../../utils';
-import { getAsyncActionCreator, ThunkReturnType } from './common';
+import { getAsyncActionCreator } from './common';
 
 const servicePath = '/oauth';
 
