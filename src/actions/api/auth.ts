@@ -2,16 +2,17 @@ import { AuthData } from '../../db';
 import { Dispatch } from 'react';
 import server from '../../server';
 import { AsyncAction } from '../../utils';
-import { getAsyncActionCreator } from './common';
+import { getAsyncActionCreator, ThunkReturnType } from './common';
 
 const servicePath = '/oauth';
 
 export const LOGIN = 'LOGIN';
 
-const _login = getAsyncActionCreator(LOGIN);
+const _login = getAsyncActionCreator<AuthData>(LOGIN);
 
 const login = (data: AuthData) => {
-	return (dispatch: Dispatch<AsyncAction>) => {
+
+	return (dispatch: Dispatch<AsyncAction<AuthData>>) => {
 		// Set pending
 		dispatch(_login({ state: 'pending' }));
 
@@ -24,7 +25,7 @@ const login = (data: AuthData) => {
 				data,
 			})
 			.then(
-				() => dispatch(_login({ state: 'success' })),
+				() => dispatch(_login({ state: 'success' }, data)),
 				() => dispatch(_login({
 					state: 'error',
 					msg: 'Authorization failed',

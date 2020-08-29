@@ -1,12 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
 import { Form, Input, Button, Typography, message } from 'antd';
 import { FlexCenter, FlexColumnBetween } from '../../components/layout';
 import paths from '../paths';
-import { api } from '../../config';
+import { api } from '../../actions';
 import { AuthData } from '../../db';
+import { RootState } from '../../store';
+import { AsyncState, useAsyncDispatch } from '../../utils';
 
 // Types
 export type LoginFormProps = {
@@ -60,13 +63,15 @@ const passwordRulesRegister = [
  */
 const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 	const history = useHistory();
-	const [isPending, setIsPending] = useState<boolean>(false);
+	const asyncDispatch = useAsyncDispatch();
+
+	const asyncState = useSelector<RootState>(
+		state => state.auth.asyncState,
+	) as AsyncState;
 
 	const onFinish = useCallback((data: AuthData) => {
-		setIsPending(true);
-
 		if (isNewUser) {
-			api.signUp(data)
+			asyncDispatch(api.signUp(data))
 				.then(
 					() => {
 						message.success(`
@@ -77,18 +82,15 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 					},
 					() => {
 						message.error('Can not create a user');
-						setIsPending(false);
 					},
 				);
-			return;
 		}
-		api.login(data)
+		asyncDispatch(api.login(data))
 			.then(
 				() => history.replace(paths.dashboard),
 				() => message.error('Something went wrong'),
-			)
-		;
-	}, [history, isNewUser]);
+			);
+	}, [history, isNewUser, asyncDispatch]);
 
 	const greetingText = useMemo(() => (
 		isNewUser
@@ -150,7 +152,7 @@ const LoginForm: React.FC<LoginFormProps> = React.memo(({ isNewUser }) => {
 							type="primary"
 							htmlType="submit"
 							block
-							loading={ isPending }
+							loading={ asyncState.state === 'pending' }
 						>
 							{ submitBtnText }
 						</Submit>

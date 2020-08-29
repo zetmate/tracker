@@ -1,5 +1,5 @@
-import { AsyncAction, AsyncState } from '../../utils';
-import { AuthData } from '../../db';
+import { AsyncAction } from '../../utils';
+import { AuthData, UsersData } from '../../db';
 import { Dispatch } from 'react';
 import server from '../../server';
 import { getAsyncActionCreator } from './common';
@@ -11,10 +11,10 @@ const servicePath = '/users';
 * */
 export const SIGN_UP = 'SIGN_UP';
 
-const _signUp = getAsyncActionCreator(SIGN_UP);
+const _signUp = getAsyncActionCreator<AuthData>(SIGN_UP);
 
 const signUp = (data: AuthData) => {
-	return (dispatch: Dispatch<AsyncAction>) => {
+	return (dispatch: Dispatch<AsyncAction<AuthData>>) => {
 		// Set pending
 		dispatch(_signUp({ state: 'pending' }));
 
@@ -27,7 +27,7 @@ const signUp = (data: AuthData) => {
 				data,
 			})
 			.then(
-				() => dispatch(_signUp({ state: 'success' })),
+				() => dispatch(_signUp({ state: 'success' }, data)),
 				() => dispatch(_signUp({
 					state: 'error',
 					msg: 'Can not create a user',
@@ -41,10 +41,10 @@ const signUp = (data: AuthData) => {
 * */
 export const FETCH_USERS = 'FETCH_USERS';
 
-const _fetchUsers = getAsyncActionCreator(FETCH_USERS);
+const _fetchUsers = getAsyncActionCreator<UsersData>(FETCH_USERS);
 
 const fetchUsers = () => {
-	return (dispatch: Dispatch<AsyncAction>) => {
+	return (dispatch: Dispatch<AsyncAction<UsersData>>) => {
 		// Set pending
 		dispatch(_fetchUsers({ state: 'pending' }));
 
@@ -56,7 +56,7 @@ const fetchUsers = () => {
 				method: 'GET',
 			})
 			.then(
-				() => dispatch(_fetchUsers({ state: 'success' })),
+				({ data }) => dispatch(_fetchUsers({ state: 'success' }, data)),
 				() => dispatch(_fetchUsers({
 					state: 'error',
 					msg: 'Data fetch failed',

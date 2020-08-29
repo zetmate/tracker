@@ -1,7 +1,6 @@
-import API, { Response } from '../api';
+import { Response } from '../server';
 import { AuthData, UsersData } from '../db';
-
-const server = new API();
+import server from '../server';
 
 const authServicePath = '/oauth';
 const usersServicePath = '/users';

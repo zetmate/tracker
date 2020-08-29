@@ -1,13 +1,12 @@
-import { Service, methodNotAllowed, UrlParams, Request } from '../common';
+import { Service, methodNotAllowed } from '../common';
+import { Request } from '../common';
 
 const authService: Service = {
 	baseUrl: '/oauth',
 	api: {
 		'/authenticate': {
-			'POST'(urlParams: UrlParams, data: any): ReturnType<Request> {
+			'POST'(): ReturnType<Request> {
 				return new Promise((resolve) => {
-					console.log('logging in as:', data.username);
-
 					setTimeout(
 						() => resolve({ status: 201 }),
 						500,
