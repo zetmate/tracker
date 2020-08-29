@@ -24,6 +24,7 @@ const defaultState: RootState = {
 				clockedTime: 0,
 			},
 		},
+		usersFilter: {},
 	},
 };
 
