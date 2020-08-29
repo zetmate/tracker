@@ -8,10 +8,15 @@ export type UrlParams = {
 export type Request =
 	(urlParams?: UrlParams, data?: any) => Promise<Response>;
 
-export type Service = {
+export type ServiceApi = {
 	[key: string]: {
 		[key in Method]: Request
 	}
+}
+
+export type Service = {
+	baseUrl: string,
+	api: ServiceApi
 };
 
 export const methodNotAllowed = (): Promise<Response> => (
