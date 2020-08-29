@@ -1,15 +1,13 @@
 import _ from 'lodash';
-import { UrlParams, Response, Method, Service } from './common';
+import { Response, Method, Service, RequestOptions } from './common';
 import * as services from './services';
 
 export { Response };
 
-export type RequestConfig = {
-	urlParams?: UrlParams,
+export type RequestConfig = RequestOptions & {
 	method: Method,
 	servicePath: string,
 	url: string,
-	data?: any,
 }
 
 export interface IServer {
@@ -20,7 +18,10 @@ const notFound = () => Promise.reject({ status: 404 });
 
 class Server implements IServer {
 	request(config: RequestConfig): ReturnType<IServer['request']> {
-		const { servicePath, url, method, data, urlParams } = config;
+		const {
+			servicePath, url, method,
+			data = {}, urlParams = {}, queryParams = {},
+		} = config;
 
 		const service = this.services.get(servicePath);
 		if (!service) {
@@ -35,7 +36,7 @@ class Server implements IServer {
 			return notFound();
 		}
 
-		return requestService(urlParams, data);
+		return requestService({ urlParams, data, queryParams });
 	}
 
 	private services = new Map<string, Service>(

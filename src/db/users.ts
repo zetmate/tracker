@@ -1,12 +1,8 @@
-import _ from 'lodash';
 import faker from 'faker';
 import { UsersData } from './types';
 
-const toFixedNumber = (float: number, numDigits: number): number => (
-	_.toNumber(float.toFixed(numDigits))
-);
-const getRandomTrackedTime = (): number => (
-	toFixedNumber(Math.random() * 1000 + 1, 1)
+const getRandomTrackedTime = (ceil: number): number => (
+	Math.random() * ceil + 1
 );
 
 const generateUsersData = (): UsersData => {
@@ -21,9 +17,9 @@ const generateUsersData = (): UsersData => {
 	};
 
 	for (let i = 0; i < numUsers; i++) {
-		const productiveTime = getRandomTrackedTime();
-		const unproductiveTime = getRandomTrackedTime();
-		const totalTime = toFixedNumber(productiveTime + unproductiveTime, 1);
+		const productiveTime = getRandomTrackedTime(20000);
+		const unproductiveTime = getRandomTrackedTime(5000);
+		const totalTime = productiveTime + unproductiveTime;
 
 		users.push({
 			id: i,
@@ -31,10 +27,7 @@ const generateUsersData = (): UsersData => {
 			productiveTime,
 			unproductiveTime,
 			totalTime,
-			productivityRatio: toFixedNumber(
-				productiveTime / unproductiveTime,
-				2,
-			),
+			productivityRatio: productiveTime / unproductiveTime,
 		});
 
 		total.clockedTime += totalTime;
@@ -44,12 +37,7 @@ const generateUsersData = (): UsersData => {
 
 	return {
 		content: users,
-		total: {
-			...total,
-			clockedTime: toFixedNumber(total.clockedTime, 1),
-			productiveTime: toFixedNumber(total.productiveTime, 1),
-			unproductiveTime: toFixedNumber(total.unproductiveTime, 1),
-		},
+		total,
 	};
 };
 

@@ -9,7 +9,7 @@ import paths from '../paths';
 import { api } from '../../actions';
 import { AuthData } from '../../db';
 import { RootState } from '../../store';
-import { AsyncState, useAsyncDispatch } from '../../utils';
+import { AsyncState, useAsyncDispatch, FormItemNoMargin } from '../../utils';
 
 // Types
 export type LoginFormProps = {
@@ -184,10 +184,6 @@ const FormContainer = styled(FlexColumnBetween)`
 
 const StyledForm = styled(Form)`
 	width: 400px;
-`;
-
-const FormItemNoMargin = styled(Form.Item)`
-	margin: 0 !important;
 `;
 
 const StyledTitle = styled(Typography.Title)`
