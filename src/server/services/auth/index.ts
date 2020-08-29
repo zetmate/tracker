@@ -1,5 +1,4 @@
-import { Service, methodNotAllowed } from '../common';
-import { Request } from '../common';
+import { Request, Service, methodNotAllowed } from '../../common';
 
 const authService: Service = {
 	baseUrl: '/oauth',

@@ -1,12 +1,16 @@
 export type Method = 'GET' | 'PATCH' | 'PUT' | 'POST' | 'DELETE';
 export type Response = { status: number, data?: any };
 
-export type UrlParams = {
+export type Params = {
 	[key: string]: string
 }
 
-export type Request =
-	(urlParams?: UrlParams, data?: any) => Promise<Response>;
+export type RequestOptions = {
+	urlParams?: Params,
+	queryParams?: Params,
+	data?: any,
+}
+export type Request = (options?: RequestOptions) => Promise<Response>;
 
 export type ServiceApi = {
 	[key: string]: {

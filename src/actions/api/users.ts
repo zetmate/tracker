@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { AsyncAction } from '../../utils';
 import { AuthData, UsersData } from '../../db';
 import { Dispatch } from 'react';
@@ -41,9 +43,27 @@ const signUp = (data: AuthData) => {
 * */
 export const FETCH_USERS = 'FETCH_USERS';
 
+export type UsersFilter = {
+	name?: string
+}
+
+const parseFilterToQuery = (filter: UsersFilter) => {
+	const searchString = _.reduce(filter, (result, value, key) => (
+		`${ result ? `${ result },` : '' }${ key }:${ value }`
+	), '');
+
+	if (!searchString) {
+		return {};
+	}
+
+	return {
+		search: searchString,
+	};
+};
+
 const _fetchUsers = getAsyncActionCreator<UsersData>(FETCH_USERS);
 
-const fetchUsers = () => {
+const fetchUsers = (filter: UsersFilter) => {
 	return (dispatch: Dispatch<AsyncAction<UsersData>>) => {
 		// Set pending
 		dispatch(_fetchUsers({ state: 'pending' }));
@@ -54,6 +74,7 @@ const fetchUsers = () => {
 				servicePath,
 				url: '/',
 				method: 'GET',
+				queryParams: parseFilterToQuery(filter),
 			})
 			.then(
 				({ data }) => dispatch(_fetchUsers({ state: 'success' }, data)),
