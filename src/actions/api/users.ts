@@ -63,7 +63,7 @@ const parseFilterToQuery = (filter: UsersFilter) => {
 
 const _fetchUsers = getAsyncActionCreator<UsersData>(FETCH_USERS);
 
-const fetchUsers = (filter: UsersFilter) => {
+const fetchUsers = (filter: UsersFilter = {}) => {
 	return (dispatch: Dispatch<AsyncAction<UsersData>>) => {
 		// Set pending
 		dispatch(_fetchUsers({ state: 'pending' }));
