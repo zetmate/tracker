@@ -3,6 +3,8 @@ export type AuthData = {
 	password: string;
 }
 
+export type UsersIds = number[];
+
 export type UserData = {
 	id: number,
 	name: string;
@@ -21,3 +23,19 @@ export type UsersData = {
 		unproductiveTime: number,
 	}
 }
+
+export type TimeTrackLabel = 'productive' | 'unproductive';
+
+export type TimeTrack = {
+	id: number,
+	userId: number,
+	label: TimeTrackLabel,
+	duration: number,
+	date: string,
+}
+
+export type TimeTracksByUser = {
+	[key: number]: TimeTrack[]
+}
+
+export const dateFormat = 'YYYY-MM-DD';
