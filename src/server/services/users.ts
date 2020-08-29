@@ -18,10 +18,14 @@ const usersService: Service = {
 
 			'GET'() {
 				return db.getUsersData()
-					.then(
-						(usersData) => ({
-							status: 200,
-							data: usersData,
+					.then(usersData =>
+						new Promise(resolve => {
+							setTimeout(() => {
+								resolve({
+									status: 200,
+									data: usersData,
+								});
+							}, 1000);
 						}),
 					);
 			},

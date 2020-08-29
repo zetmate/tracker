@@ -23,10 +23,10 @@ const generateUsersData = (): UsersData => {
 	for (let i = 0; i < numUsers; i++) {
 		const productiveTime = getRandomTrackedTime();
 		const unproductiveTime = getRandomTrackedTime();
-		const totalTime = productiveTime + unproductiveTime;
+		const totalTime = toFixedNumber(productiveTime + unproductiveTime, 1);
 
 		users.push({
-			key: i,
+			id: i,
 			name: faker.name.findName(),
 			productiveTime,
 			unproductiveTime,

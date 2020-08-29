@@ -4,7 +4,8 @@ import { UserData } from '../../../db';
 import { Table } from 'antd';
 
 type Props = {
-	usersList: UserData[]
+	usersList: UserData[],
+	isLoading: boolean,
 }
 
 const columns = [
@@ -14,17 +15,17 @@ const columns = [
 		dataIndex: 'name',
 	},
 	{
-		title: 'Total time',
+		title: 'Total time (h)',
 		key: 'totalTime',
 		dataIndex: 'totalTime',
 	},
 	{
-		title: 'Productive time',
+		title: 'Productive time (h)',
 		key: 'productiveTime',
 		dataIndex: 'productiveTime',
 	},
 	{
-		title: 'Unproductive time',
+		title: 'Unproductive time (h)',
 		key: 'unproductiveTime',
 		dataIndex: 'unproductiveTime',
 	},
@@ -35,9 +36,16 @@ const columns = [
 	},
 ];
 
-const UsersTable: React.FC<Props> = React.memo(({ usersList }) => {
+const UsersTable: React.FC<Props> = React.memo((props) => {
+	const { usersList, isLoading } = props;
+
 	return (
-		<Table columns={ columns } dataSource={ usersList } />
+		<Table
+			columns={ columns }
+			dataSource={ usersList }
+			loading={ isLoading }
+			rowKey="id"
+		/>
 	);
 });
 UsersTable.displayName = 'UsersTable';

@@ -5,9 +5,9 @@ import { FETCH_USERS } from '../../actions/api';
 export const usersData = (
 	state: UsersData = null,
 	action: AsyncAction<UsersData>,
-) => {
+): UsersData => {
 	if (action.type === FETCH_USERS && action.asyncState.state === 'success') {
-		return usersData;
+		return action.data;
 	}
 	return state;
 };
