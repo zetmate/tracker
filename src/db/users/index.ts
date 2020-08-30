@@ -79,6 +79,7 @@ export const generateUsersData = (
 				name: faker.name.findName(),
 				...timeData,
 				productivityRatio: productiveTime / unproductiveTime,
+				isDisabled: false,
 			};
 
 			return result;

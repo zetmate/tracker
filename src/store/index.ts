@@ -37,6 +37,7 @@ const defaultState: RootState = {
 			productiveTime: null,
 			unproductiveTime: null,
 			productivityRatio: null,
+			isDisabled: null,
 		},
 		timeTracks: [],
 	},
