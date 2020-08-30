@@ -37,7 +37,7 @@ const Summary: React.FC<SummaryProps> = React.memo(({ data }) => {
 	), [data.productivityRatio]);
 
 	return (
-		<FlexRowBetween>
+		<FlexRowBetween pb={ 15 }>
 			{ usersStat }
 			<Statistic
 				title="Total clocked time"

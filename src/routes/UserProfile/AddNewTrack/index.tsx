@@ -5,6 +5,8 @@ import locale from 'antd/es/date-picker/locale/en_GB';
 
 import { DatePicker, Button, TimePicker, Form, Select } from 'antd';
 import { dateFormat, TimeTrack, TimeTrackLabel } from '../../../db';
+import { Flex } from '../../../components/layout';
+import { FormItemNoMargin } from '../../../utils';
 
 const checkIfDateDisabled = (date: moment.Moment): boolean => (
 	date.isAfter(moment())
@@ -60,57 +62,59 @@ const AddNewTimeTrack: React.FC<Props> = React.memo((props) => {
 	}, [onSubmit]);
 
 	return (
-		<Form
-			layout="vertical"
-			onFinish={ onFinish }
-			initialValues={ initialValues }
-		>
-
-			<Form.Item
-				label="Date"
-				name="date"
-				rules={ fieldRules }
+		<Flex py={ 30 }>
+			<Form
+				layout="inline"
+				onFinish={ onFinish }
+				initialValues={ initialValues }
 			>
-				<DatePicker
-					locale={ locale }
-					disabledDate={ checkIfDateDisabled }
-				/>
-			</Form.Item>
 
-			<Form.Item
-				label="Time"
-				name="time"
-				rules={ fieldRules }
-			>
-				{/* @ts-ignore */ }
-				<TimePicker.RangePicker
-					format={ format }
-					minuteStep={ 15 }
-				/>
-			</Form.Item>
+				<Form.Item
+					label="Date"
+					name="date"
+					rules={ fieldRules }
+				>
+					<DatePicker
+						locale={ locale }
+						disabledDate={ checkIfDateDisabled }
+					/>
+				</Form.Item>
+
+				<Form.Item
+					label="Time"
+					name="time"
+					rules={ fieldRules }
+				>
+					{/* @ts-ignore */ }
+					<TimePicker.RangePicker
+						format={ format }
+						minuteStep={ 15 }
+					/>
+				</Form.Item>
 
 
-			<Form.Item
-				label="Label"
-				name="label"
-				rules={ fieldRules }
-			>
-				<Select>
-					<Select.Option value="productive">
-						Productive
-					</Select.Option>
-					<Select.Option value="unproductive">
-						Unproductive
-					</Select.Option>
-				</Select>
-			</Form.Item>
+				<Form.Item
+					label="Label"
+					name="label"
+					rules={ fieldRules }
+				>
+					<Select>
+						<Select.Option value="productive">
+							Productive
+						</Select.Option>
+						<Select.Option value="unproductive">
+							Unproductive
+						</Select.Option>
+					</Select>
+				</Form.Item>
 
-			<Form.Item>
-				<Button type="primary" htmlType="submit" block>
-					Add new track
-				</Button>
-			</Form.Item>
-		</Form>
+				<FormItemNoMargin>
+					<Button type="primary" htmlType="submit" block>
+						Add new track
+					</Button>
+				</FormItemNoMargin>
+			</Form>
+		</Flex>
 
 	);
 });

@@ -49,5 +49,7 @@ Dashboard.displayName = 'Dashboard';
 export default Dashboard;
 
 const Container = styled.div`
-	flex: 1 0 auto
+	width: 1200px;
+	flex: 1 0 auto;
+	align-self: center;
 `;

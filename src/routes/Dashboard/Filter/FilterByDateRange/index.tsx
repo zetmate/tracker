@@ -5,6 +5,7 @@ import locale from 'antd/es/date-picker/locale/en_GB';
 import { Button, DatePicker } from 'antd';
 import { dateFormat } from '../../../../db';
 import { DateRange } from '../../../../utils';
+import { Flex } from '../../../../components/layout';
 
 type Range = [moment.Moment, moment.Moment];
 
@@ -44,7 +45,7 @@ const FilterByDateRange: React.FC<Props> = React.memo(({ onApply }) => {
 	}, [range, onApply]);
 
 	return (
-		<>
+		<Flex px={ 20 }>
 			<DatePicker.RangePicker
 				locale={ locale }
 				disabledDate={ checkIfDateDisabled }
@@ -56,7 +57,7 @@ const FilterByDateRange: React.FC<Props> = React.memo(({ onApply }) => {
 			>
 				{ btnText }
 			</Button>
-		</>
+		</Flex>
 	);
 });
 

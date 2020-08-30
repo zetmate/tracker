@@ -46,13 +46,15 @@ const Filter: React.FC = React.memo(() => {
 	}, [filter]);
 
 	return (
-		<Flex width="100%">
-			<Input.Search
-				placeholder="Search by name"
-				enterButton="Search"
-				onSearch={ onSearch }
-				style={ searchStyle }
-			/>
+		<Flex width="100%" py={ 30 }>
+			<Flex pr={ 20 }>
+				<Input.Search
+					placeholder="Search by name"
+					enterButton="Search"
+					onSearch={ onSearch }
+					style={ searchStyle }
+				/>
+			</Flex>
 			<FilterByDateRange onApply={ onApplyDateRange } />
 			<Button type="link" onClick={ onBtnClick }>
 				{
