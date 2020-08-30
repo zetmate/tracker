@@ -105,8 +105,6 @@ export const filterUsersList = (
 		? dateRangeString.split(':') as DateRange
 		: null;
 
-	console.log('daterangestr', dateRangeString);
-
 	const total: UsersData['total'] = {
 		clockedTime: 0,
 		productiveTime: 0,

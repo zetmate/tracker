@@ -7,7 +7,7 @@ import {
 	Request,
 } from '../../common';
 
-import { db, UserData } from '../../../db';
+import { db } from '../../../db';
 import { filterUsersList } from './filter';
 
 const rejectInvalidUserId = (userId: string): ReturnType<Request> => {

@@ -31,19 +31,21 @@ const UserProfile: React.FC = React.memo(() => {
 
 	const onNameChange = useCallback((value: string) => {
 		setName(value);
+
 		asyncDispatch(api.setUserData({
 			...data,
 			name: value,
 		}))
-			.catch(showError)
+			.then(
+				() => message.success('User name has been updated'),
+				showError,
+			)
 		;
 	}, [data, asyncDispatch]);
 
 	const titleConfig = useMemo(() => ({
 		onChange: onNameChange,
 	}), [onNameChange]);
-
-	console.log('data', data);
 
 	return (
 		<WithLoader

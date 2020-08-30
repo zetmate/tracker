@@ -112,10 +112,11 @@ const setUserData = (data: UserData) => {
 			.request({
 				servicePath,
 				url: '/:userId',
-				method: 'POST',
+				method: 'PUT',
 				urlParams: {
 					userId: _.toString(data.id),
 				},
+				data,
 			})
 			.then(
 				({ data }) => {
