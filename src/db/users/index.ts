@@ -4,9 +4,10 @@ import {
 	TimeTrack,
 	TimeTracksByUser,
 	UserData,
-	UsersData,
+	UsersData, UsersDataByUser,
 	UsersIds,
 } from '../types';
+import { getKeyForUser, getKeyForUserTracks } from '../keys';
 
 export const generateUsersIds = (): UsersIds => {
 	const numUsers = 10100;
@@ -21,17 +22,17 @@ export const generateUsersIds = (): UsersIds => {
 type UserTimeData = {
 	productiveTime: UserData['productiveTime'],
 	unproductiveTime: UserData['unproductiveTime'],
-	totalTime: UserData['totalTime'],
+	clockedTime: UserData['clockedTime'],
 }
 
 const parseUserTimeFromTracks = (
 	userTracks: TimeTrack[],
 ): UserTimeData => (
 	_.reduce(userTracks, (result, track) => {
-		const totalTime = result.totalTime + track.duration;
+		const clockedTime = result.clockedTime + track.duration;
 		const updatedResult = {
 			...result,
-			totalTime,
+			clockedTime,
 		};
 
 		if (track.label === 'productive') {
@@ -45,13 +46,13 @@ const parseUserTimeFromTracks = (
 			...updatedResult,
 			unproductiveTime: track.duration + result.unproductiveTime,
 		};
-	}, { totalTime: 0, productiveTime: 0, unproductiveTime: 0 })
+	}, { clockedTime: 0, productiveTime: 0, unproductiveTime: 0 })
 );
 
 export const generateUsersData = (
 	usersIds: UsersIds,
 	timeTracks: TimeTracksByUser,
-): UsersData => {
+): UsersDataByUser => {
 	const numUsers = usersIds.length;
 	const total: UsersData['total'] = {
 		users: numUsers,
@@ -60,22 +61,29 @@ export const generateUsersData = (
 		clockedTime: 0,
 	};
 
-	const users: UsersData['content'] = _.map(usersIds, id => {
-		const tracks = (_.get(timeTracks, id) || []) as TimeTrack[];
-		const timeData = parseUserTimeFromTracks(tracks);
-		const { totalTime, productiveTime, unproductiveTime } = timeData;
+	const users: UsersDataByUser['content'] = (
+		_.reduce(usersIds, (result, id) => {
+			const tracks = (
+				_.get(timeTracks, getKeyForUserTracks(id)) || []
+			) as TimeTrack[];
 
-		total.clockedTime += totalTime;
-		total.productiveTime += productiveTime;
-		total.unproductiveTime += unproductiveTime;
+			const timeData = parseUserTimeFromTracks(tracks);
+			const { clockedTime, productiveTime, unproductiveTime } = timeData;
 
-		return {
-			id,
-			name: faker.name.findName(),
-			...timeData,
-			productivityRatio: productiveTime / unproductiveTime,
-		};
-	});
+			total.clockedTime += clockedTime;
+			total.productiveTime += productiveTime;
+			total.unproductiveTime += unproductiveTime;
+
+			result[getKeyForUser(id)] = {
+				id,
+				name: faker.name.findName(),
+				...timeData,
+				productivityRatio: productiveTime / unproductiveTime,
+			};
+
+			return result;
+		}, {} as UsersDataByUser['content'])
+	);
 
 	return {
 		content: users,

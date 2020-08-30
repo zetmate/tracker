@@ -7,6 +7,7 @@ import {
 	TimeTracksByUser,
 	UsersIds,
 } from '../types';
+import { getKeyForUserTracks } from '../keys';
 
 const labels: TimeTrackLabel[] = ['productive', 'unproductive'];
 
@@ -39,13 +40,18 @@ const generateTrack = (
 	id: number,
 	userId: number,
 	date: string,
-): TimeTrack => ({
-	id,
-	userId,
-	duration: getRandomTrackedTime(9),
-	date,
-	label: getRandomLabel(),
-});
+): TimeTrack => {
+	const label = getRandomLabel();
+	const maxHours = label === 'productive' ? 9 : 5;
+
+	return {
+		id,
+		userId,
+		duration: getRandomTrackedTime(maxHours),
+		date,
+		label,
+	};
+};
 
 const generateTracksForMonth = (
 	id: number,
@@ -56,7 +62,8 @@ const generateTracksForMonth = (
 	const startPoint = startFrom || numDaysByMonth[month];
 	const tracks: TimeTrack[] = [];
 
-	for (let i = startPoint; i > 0; i--) {
+	// some days are skipped fro performance reasons
+	for (let i = startPoint; i > 0; i -= 8) {
 		const date = moment().month(month).day(i).format(dateFormat);
 
 		tracks.push(generateTrack(id, userId, date));
@@ -65,7 +72,7 @@ const generateTracksForMonth = (
 	return tracks;
 };
 
-// Generate tracks for last three month
+// Generate tracks
 export const generateTimeTracks = (usersIds: UsersIds): TimeTracksByUser => {
 	const date = moment();
 	const day = date.day();
@@ -81,12 +88,12 @@ export const generateTimeTracks = (usersIds: UsersIds): TimeTracksByUser => {
 			tracks.push(...generateTracksForMonth(id, userId, i, startDay));
 			id++;
 
-			// We generate only last 3 month of the current year
+			// We generate only last 2 month of the current year
 			if (month - i === 3) {
 				break;
 			}
 		}
-		result[userId] = tracks;
+		result[getKeyForUserTracks(userId)] = tracks;
 
 		return result;
 	}, {} as TimeTracksByUser);

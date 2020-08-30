@@ -8,7 +8,7 @@ export type UsersIds = number[];
 export type UserData = {
 	id: number,
 	name: string;
-	totalTime: number,
+	clockedTime: number,
 	productiveTime: number,
 	unproductiveTime: number,
 	productivityRatio: number,
@@ -24,6 +24,13 @@ export type UsersData = {
 	}
 }
 
+export type UsersDataByUser = {
+	content: {
+		[key: string]: UserData
+	},
+	total: UsersData['total']
+}
+
 export type TimeTrackLabel = 'productive' | 'unproductive';
 
 export type TimeTrack = {
@@ -35,7 +42,7 @@ export type TimeTrack = {
 }
 
 export type TimeTracksByUser = {
-	[key: number]: TimeTrack[]
+	[key: string]: TimeTrack[]
 }
 
 export const dateFormat = 'YYYY-MM-DD';

@@ -27,7 +27,7 @@ const usersService: Service = {
 			'GET'({ queryParams }): ReturnType<Request> {
 				const searchString = queryParams.search;
 
-				return db.getUsersData()
+				return db.getAllUsersData()
 					.then(
 						usersData => {
 							const result = searchString
