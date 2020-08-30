@@ -24,7 +24,9 @@ const defaultState: RootState = {
 				clockedTime: 0,
 			},
 		},
-		usersFilter: {},
+		usersFilter: {
+			isDisabled: 'false',
+		},
 	},
 	user: {
 		asyncState: {
