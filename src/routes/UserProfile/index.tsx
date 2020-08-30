@@ -12,6 +12,7 @@ import Name from './Name';
 import { Summary, SummaryProps } from '../common';
 import { FlexCenter, FlexColumn } from '../../components/layout';
 import TracksTable from './TracksTable';
+import AddNewTimeTrack, { FormData } from './AddNewTrack';
 
 const showError = () => message.error('Can not get user data');
 
@@ -25,14 +26,18 @@ const UserProfile: React.FC = React.memo(() => {
 
 	const asyncDispatch = useAsyncDispatch();
 
-	// Fetch data on mount
-	useEffect(() => {
-		asyncDispatch(api.getUserData(userId)).catch(showError);
+	const fetchTimeTracks = useCallback(() => {
 		asyncDispatch(api.getUserTimeTracks(userId))
 			.then(
 				() => setAreTracksLoading(false),
 				showError,
 			);
+	}, [asyncDispatch, userId]);
+
+	// Fetch data on mount
+	useEffect(() => {
+		asyncDispatch(api.getUserData(userId)).catch(showError);
+		fetchTimeTracks();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userId]);
 
@@ -47,6 +52,19 @@ const UserProfile: React.FC = React.memo(() => {
 			)
 		;
 	}, [data, asyncDispatch]);
+
+	const onCreateTimeTrack = useCallback((data: FormData) => {
+		message.loading('Creating new time track');
+
+		asyncDispatch(api.createTimeTrack({
+			userId,
+			id: timeTracks.length + 1,
+			...data,
+		}))
+			// .then(message.success('New time track has been created'))
+			.then(fetchTimeTracks)
+		;
+	}, [asyncDispatch, userId, timeTracks, fetchTimeTracks]);
 
 	const total: SummaryProps['data'] = useMemo(() => ({
 		clockedTime: data.clockedTime,
@@ -68,6 +86,7 @@ const UserProfile: React.FC = React.memo(() => {
 				<FlexColumn flex="1 0 auto">
 					<Name onChange={ onNameChange } initial={ data.name } />
 					<Summary data={ total } />
+					<AddNewTimeTrack onSubmit={ onCreateTimeTrack } />
 					<TracksTable
 						data={ timeTracks }
 						isLoading={ areTracksLoading }

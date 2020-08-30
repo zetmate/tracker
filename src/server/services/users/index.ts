@@ -129,7 +129,7 @@ const usersService: Service = {
 							new Promise(resolve => {
 								setTimeout(() => {
 									resolve({ status: 201 });
-								}, 300);
+								}, 500);
 							})
 						),
 					);

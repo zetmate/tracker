@@ -194,6 +194,7 @@ const createTimeTrack = (data: TimeTrack) => {
 				urlParams: {
 					userId: _.toString(data.userId),
 				},
+				data,
 			})
 			.then(
 				({ data }) => {
