@@ -10,7 +10,7 @@ import { useParams } from 'react-router';
 import { useAsyncDispatch } from '../../utils';
 import Name from './Name';
 import { Summary, SummaryProps } from '../common';
-import { FlexCenter } from '../../components/layout';
+import { FlexCenter, FlexColumn } from '../../components/layout';
 
 const showError = () => message.error('Can not get user data');
 
@@ -50,7 +50,7 @@ const UserProfile: React.FC = React.memo(() => {
 	}), [data]);
 
 	return (
-		<FlexCenter height="100%">
+		<FlexCenter flex="1 0 auto" flexDirection="column">
 			<WithLoader
 				isLoading={
 					_.includes(
@@ -59,10 +59,10 @@ const UserProfile: React.FC = React.memo(() => {
 					)
 				}
 			>
-				<>
+				<FlexColumn flex="1 0 auto">
 					<Name onChange={ onNameChange } initial={ data.name } />
 					<Summary data={ total } />
-				</>
+				</FlexColumn>
 			</WithLoader>
 		</FlexCenter>
 	);
