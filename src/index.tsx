@@ -16,6 +16,7 @@ import {
 import { initDb } from './db';
 import { message } from 'antd';
 import store from './store';
+import UserProfile from './routes/UserProfile';
 
 const App: React.FC = React.memo(() => {
 	// Init db before rendering anything
@@ -75,6 +76,11 @@ const App: React.FC = React.memo(() => {
 									exact
 									path={ paths.dashboard }
 									component={ Dashboard }
+								/>
+								<Route
+									exact
+									path={ paths.userProfile }
+									component={ UserProfile }
 								/>
 							</Switch>
 						</WithHeader>
