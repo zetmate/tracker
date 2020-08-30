@@ -22,7 +22,7 @@ const checkFilter = (pair: string, user: UserData): boolean => {
 	const [key, value] = pair.split(separator);
 
 	const valueRegex = new RegExp(value, 'i');
-	const adaptedValue = _.toString(_.get(user, key) || '');
+	const adaptedValue = _.toString(_.get(user, key, ''));
 
 	return valueRegex.test(adaptedValue);
 };

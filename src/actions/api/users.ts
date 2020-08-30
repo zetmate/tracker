@@ -45,12 +45,13 @@ export const FETCH_USERS = 'FETCH_USERS';
 
 export type UsersFilter = {
 	name?: string,
+	isDisabled?: string,
 	dateRange?: DateRange,
 }
 
 const parseFilterToQuery = (filter: UsersFilter) => {
 	// Search
-	const searchObj = filter.name ? { name: filter.name } : {};
+	const searchObj = _.omit(filter, 'dateRange');
 
 	const searchString = _.reduce(searchObj, (result, value, key) => (
 		`${ result ? `${ result },` : '' }${ key }:${ value }`

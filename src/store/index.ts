@@ -24,7 +24,9 @@ const defaultState: RootState = {
 				clockedTime: 0,
 			},
 		},
-		usersFilter: {},
+		usersFilter: {
+			isDisabled: 'false',
+		},
 	},
 	user: {
 		asyncState: {
@@ -37,6 +39,7 @@ const defaultState: RootState = {
 			productiveTime: null,
 			unproductiveTime: null,
 			productivityRatio: null,
+			isDisabled: null,
 		},
 		timeTracks: [],
 	},

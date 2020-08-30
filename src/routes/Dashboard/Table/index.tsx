@@ -1,10 +1,12 @@
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { UserData } from '../../../db';
-import { Button, Table } from 'antd';
+import { Button, Table, Switch, message } from 'antd';
 import paths from '../../paths';
 import { useHistory } from 'react-router-dom';
+import { useAsyncDispatch } from '../../../utils';
+import { api } from '../../../actions';
 
 type Props = {
 	usersList: UserData[],
@@ -21,7 +23,10 @@ const getRenderNumber = (numDigits: number) => (value: number | string) => {
 	return number.toFixed(numDigits);
 };
 
-const getColumns = (history: ReturnType<typeof useHistory>) => [
+const getColumns = (
+	history: ReturnType<typeof useHistory>,
+	onIsEnabledChange: (checked: boolean, data: UserData) => void,
+) => [
 	{
 		title: 'Name',
 		key: 'name',
@@ -52,6 +57,18 @@ const getColumns = (history: ReturnType<typeof useHistory>) => [
 		render: getRenderNumber(2),
 	},
 	{
+		title: 'Is Enabled',
+		key: 'isEnabled',
+		render(text: string, record: UserData) {
+			return (
+				<Switch
+					defaultChecked={ !record.isDisabled }
+					onChange={ checked => onIsEnabledChange(checked, record) }
+				/>
+			);
+		},
+	},
+	{
 		title: 'See more details',
 		key: 'seeDetails',
 		render(text: string, record: UserData) {
@@ -61,9 +78,9 @@ const getColumns = (history: ReturnType<typeof useHistory>) => [
 			const onClick = () => history.replace(profileUrl);
 
 			return (
-				<Button type="link" onClick={ onClick }>
+				<a onClick={ onClick }>
 					Profile
-				</Button>
+				</a>
 			);
 		},
 	},
@@ -72,8 +89,22 @@ const getColumns = (history: ReturnType<typeof useHistory>) => [
 const UsersTable: React.FC<Props> = React.memo((props) => {
 	const { usersList, isLoading } = props;
 	const history = useHistory();
+	const asyncDispatch = useAsyncDispatch();
 
-	const columns = useMemo(() => getColumns(history), [history]);
+	const onIsEnabledChange = useCallback((
+		checked: boolean, data: UserData,
+	) => {
+		asyncDispatch(api.setUserData({
+			...data,
+			isDisabled: !checked,
+		}))
+			.then(() => message.success('User data has been updated'))
+		;
+	}, [asyncDispatch]);
+
+	const columns = useMemo(() => (
+		getColumns(history, onIsEnabledChange)
+	), [history]);
 
 	return (
 		<Table

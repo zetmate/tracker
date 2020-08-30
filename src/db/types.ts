@@ -12,6 +12,7 @@ export type UserData = {
 	productiveTime: number,
 	unproductiveTime: number,
 	productivityRatio: number,
+	isDisabled: boolean,
 }
 
 export type UsersData = {
