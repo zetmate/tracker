@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import styled from 'styled-components';
@@ -34,7 +35,12 @@ const Dashboard: React.FC = React.memo(() => {
 			<Summary data={ usersData.total } />
 			<UsersTable
 				usersList={ usersData.content }
-				isLoading={ asyncState.state === 'pending' }
+				isLoading={
+					_.includes(
+						['initial', 'pending'],
+						asyncState.state,
+					)
+				}
 			/>
 		</Container>
 	);
