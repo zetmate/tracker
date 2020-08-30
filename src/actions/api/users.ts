@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { AsyncAction } from '../../utils';
-import { AuthData, UsersData } from '../../db';
+import { AuthData, TimeTrack, UserData, UsersData } from '../../db';
 import { Dispatch } from 'react';
 import server from '../../server';
 import { getAsyncActionCreator } from './common';
@@ -86,7 +86,85 @@ const fetchUsers = (filter: UsersFilter = {}) => {
 	};
 };
 
+/*
+* Set user data
+* */
+export const SET_USER_DATA = 'SET_USER_DATA';
+
+const _setUserData = getAsyncActionCreator<UsersData>(SET_USER_DATA);
+
+const setUserData = (data: UserData) => {
+	return (dispatch: Dispatch<AsyncAction<UsersData>>) => {
+		// Set pending
+		dispatch(_setUserData({ state: 'pending' }));
+
+		// Request data
+		return server
+			.request({
+				servicePath,
+				url: '/:userId',
+				method: 'GET',
+				urlParams: {
+					userId: _.toString(data.id),
+				},
+			})
+			.then(
+				({ data }) => {
+					dispatch(_setUserData({
+						state: 'success',
+					}, data));
+				},
+				() => {
+					dispatch(_setUserData({
+						state: 'error',
+						msg: 'Can not save user data',
+					}));
+				},
+			);
+	};
+};
+
+/*
+* Add time track
+* */
+export const CREATE_TIME_TRACK = 'CREATE_TIME_TRACK';
+
+const _createTimeTrack = getAsyncActionCreator<TimeTrack>(CREATE_TIME_TRACK);
+
+const createTimeTrack = (data: TimeTrack) => {
+	return (dispatch: Dispatch<AsyncAction<TimeTrack>>) => {
+		// Set pending
+		dispatch(_createTimeTrack({ state: 'pending' }));
+
+		// Request data
+		return server
+			.request({
+				servicePath,
+				url: '/:userId/time-tracks',
+				method: 'POST',
+				urlParams: {
+					userId: _.toString(data.userId),
+				},
+			})
+			.then(
+				({ data }) => {
+					dispatch(_createTimeTrack({
+						state: 'success',
+					}, data));
+				},
+				() => {
+					dispatch(_createTimeTrack({
+						state: 'error',
+						msg: 'Can not add new time track',
+					}));
+				},
+			);
+	};
+};
+
 export default {
 	signUp,
 	fetchUsers,
+	setUserData,
+	createTimeTrack,
 };
