@@ -1,6 +1,9 @@
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { Form } from 'antd';
+import { Map } from 'immutable';
+
+import { UserData } from '../db';
 
 export type AsyncState = {
 	state: 'initial' | 'pending' | 'success' | 'error',
@@ -27,3 +30,5 @@ export const FormItemNoMargin = styled(Form.Item)`
 `;
 
 export type DateRange = [string, string]
+
+export type UserDataMap = Map<keyof UserData, string | number | boolean>;

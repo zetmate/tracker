@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { AsyncAction, AsyncState } from '../utils';
-
-type AsyncStateReducer
-	= (state: AsyncState, action: AsyncAction<unknown>) => AsyncState;
+import { Map, fromJS } from 'immutable';
 
 /**
  * Creates async state reducer
@@ -10,11 +8,11 @@ type AsyncStateReducer
  */
 export const getAsyncStateReducer = (
 	actionTypes: string[],
-): AsyncStateReducer => {
-	return (state = null, action) => {
+) => {
+	return (state: AsyncState = null, action: AsyncAction<unknown>) => {
 
 		if (_.includes(actionTypes, action.type)) {
-			return action.asyncState;
+			return Map(fromJS(action.asyncState));
 		}
 
 		return state;

@@ -1,18 +1,21 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux-immutable';
+import { List, Map, fromJS } from 'immutable';
 
 import { TimeTrack, UserData } from '../../db';
 import { AsyncAction } from '../../utils';
 import { GET_USER_DATA, GET_USER_TIME_TRACKS } from '../../actions/api';
 import { getAsyncStateReducer } from '../utils';
 
+type UserDataKey = keyof UserData;
+
 const data = (
 	state: UserData = null,
 	action: AsyncAction<UserData>,
-): UserData => {
+) => {
 	const hasFetched = action?.asyncState?.state === 'success';
 
 	if (action.type === GET_USER_DATA && hasFetched) {
-		return action.data;
+		return Map(fromJS(action.data));
 	}
 	return state;
 };
@@ -20,11 +23,11 @@ const data = (
 const timeTracks = (
 	state: TimeTrack[] = null,
 	action: AsyncAction<TimeTrack[]>,
-): TimeTrack[] => {
+) => {
 	const hasFetched = action?.asyncState?.state === 'success';
 
 	if (action.type === GET_USER_TIME_TRACKS && hasFetched) {
-		return action.data;
+		return List(fromJS(action.data));
 	}
 	return state;
 };

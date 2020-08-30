@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux-immutable';
 
 import { getAsyncStateReducer } from '../utils';
 import { LOGIN, SIGN_UP } from '../../actions/api';

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux-immutable';
 import { getAsyncStateReducer } from '../utils';
 import { FETCH_USERS } from '../../actions';
 import { usersData } from './users';
