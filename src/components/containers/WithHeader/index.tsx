@@ -44,10 +44,17 @@ const StyledMain = styled.main`
 
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 `;
 
 const StyledChildrenContainer = styled.section`
 	display: flex;
 	flex-direction: column;
 	flex: 1 0 auto;
+	
+	> div {
+		> * {
+			background: #fff;
+		}
+	}
 `;

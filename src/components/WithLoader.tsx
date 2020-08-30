@@ -1,6 +1,7 @@
 import React from 'react';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { FlexCenter } from './layout';
+import styled from 'styled-components';
 
 export type WithLoaderProps = {
 	children: JSX.Element,
@@ -17,13 +18,13 @@ export const WithLoader: React.FC<WithLoaderProps> = React.memo((props) => {
 
 	if (isLoading) {
 		return (
-			<FlexCenter height="100%">
+			<Container height="100%">
 				<PulseLoader
-					color="#1890ff"
+					color="#fff"
 					loading={ true }
 					size={ size }
 				/>
-			</FlexCenter>
+			</Container>
 		);
 	}
 
@@ -32,3 +33,7 @@ export const WithLoader: React.FC<WithLoaderProps> = React.memo((props) => {
 
 WithLoader.defaultProps = defaultProps;
 WithLoader.displayName = 'WithLoader';
+
+const Container = styled(FlexCenter)`
+	background: #2363b1 !important;
+`;

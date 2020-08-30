@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Flex } from '../../../components/layout';
-import { Button, Input } from 'antd';
+import { FlexRowBetween } from '../../../components/layout';
+import { Input } from 'antd';
 
 import { dashboard, UsersFilter } from '../../../actions';
 import FilterByDateRange from './FilterByDateRange';
@@ -46,24 +46,22 @@ const Filter: React.FC = React.memo(() => {
 	}, [filter]);
 
 	return (
-		<Flex width="100%" py={ 30 }>
-			<Flex pr={ 20 }>
-				<Input.Search
-					placeholder="Search by name"
-					enterButton="Search"
-					onSearch={ onSearch }
-					style={ searchStyle }
-				/>
-			</Flex>
+		<FlexRowBetween width="100%" pb={ 30 }>
+			<Input.Search
+				placeholder="Search by name"
+				enterButton="Search"
+				onSearch={ onSearch }
+				style={ searchStyle }
+			/>
 			<FilterByDateRange onApply={ onApplyDateRange } />
-			<Button type="link" onClick={ onBtnClick }>
+			<a onClick={ onBtnClick }>
 				{
 					filter.isDisabled === 'false'
 						? 'Show only disabled'
 						: 'Show only enabled'
 				}
-			</Button>
-		</Flex>
+			</a>
+		</FlexRowBetween>
 	);
 });
 Filter.displayName = 'Filter';

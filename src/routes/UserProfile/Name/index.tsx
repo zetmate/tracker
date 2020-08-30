@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Typography } from 'antd';
+import { Flex } from '../../../components/layout';
 
 type Props = {
 	initial: string;
@@ -17,9 +18,11 @@ const Name: React.FC<Props> = React.memo(({ initial, onChange }) => {
 	}), [onChange]);
 
 	return (
-		<Typography.Title editable={ editableConfig }>
-			{ name || initial }
-		</Typography.Title>
+		<Flex pt={ 15 }>
+			<Typography.Title editable={ editableConfig }>
+				{ name || initial }
+			</Typography.Title>
+		</Flex>
 	);
 });
 Name.displayName = 'Name';

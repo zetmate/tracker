@@ -10,6 +10,7 @@ import { useAsyncDispatch } from '../../utils';
 import { api } from '../../actions';
 import Filter from './Filter';
 import { Summary } from '../common';
+import { FlexCenter } from '../../components/layout';
 
 const Dashboard: React.FC = React.memo(() => {
 	const asyncDispatch = useAsyncDispatch();
@@ -30,26 +31,34 @@ const Dashboard: React.FC = React.memo(() => {
 	}, [asyncDispatch, usersFilter]);
 
 	return (
-		<Container>
-			<Filter />
-			<Summary data={ usersData.total } />
-			<UsersTable
-				usersList={ usersData.content }
-				isLoading={
-					_.includes(
-						['initial', 'pending'],
-						asyncState.state,
-					)
-				}
-			/>
-		</Container>
+		<Wrapper>
+			<Container>
+				<Filter />
+				<Summary data={ usersData.total } />
+				<UsersTable
+					usersList={ usersData.content }
+					isLoading={
+						_.includes(
+							['initial', 'pending'],
+							asyncState.state,
+						)
+					}
+				/>
+			</Container>
+		</Wrapper>
 	);
 });
 Dashboard.displayName = 'Dashboard';
 export default Dashboard;
 
-const Container = styled.div`
+const Wrapper = styled(FlexCenter)`
 	width: 1200px;
 	flex: 1 0 auto;
 	align-self: center;
+`;
+
+const Container = styled.div`
+	padding: 45px;
+	box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
+	border-radius: 20px;
 `;

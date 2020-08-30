@@ -29,7 +29,7 @@ const App: React.FC = React.memo(() => {
 		initDb()
 			.then(
 				() => {
-					setIsDbReady(true);
+					setTimeout(() => setIsDbReady(true), 200);
 				},
 				() => {
 					message.error('Database initialization failed!', 6);

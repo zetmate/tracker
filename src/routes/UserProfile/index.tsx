@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import { api } from '../../actions';
 import { WithLoader } from '../../components';
 import { RootState } from '../../store';
@@ -10,10 +10,11 @@ import { useHistory, useParams } from 'react-router';
 import { useAsyncDispatch } from '../../utils';
 import Name from './Name';
 import { Summary, SummaryProps } from '../common';
-import { FlexCenter, FlexColumn } from '../../components/layout';
+import { FlexCenter } from '../../components/layout';
 import TracksTable from './TracksTable';
 import AddNewTimeTrack, { FormData } from './AddNewTrack';
 import paths from '../paths';
+import styled from 'styled-components';
 
 const showError = () => message.error('Can not get user data');
 
@@ -85,10 +86,13 @@ const UserProfile: React.FC = React.memo(() => {
 					)
 				}
 			>
-				<FlexColumn flex="1 0 auto" py={ 20 }>
-					<Button onClick={ () => history.replace(paths.dashboard) }>
+				<Container>
+					<a
+						type="link"
+						onClick={ () => history.replace(paths.dashboard) }
+					>
 						{ '< Back to dashboard' }
-					</Button>
+					</a>
 					<Name onChange={ onNameChange } initial={ data.name } />
 					<Summary data={ total } />
 					<AddNewTimeTrack onSubmit={ onCreateTimeTrack } />
@@ -96,7 +100,7 @@ const UserProfile: React.FC = React.memo(() => {
 						data={ timeTracks }
 						isLoading={ areTracksLoading }
 					/>
-				</FlexColumn>
+				</Container>
 			</WithLoader>
 		</FlexCenter>
 	);
@@ -104,3 +108,9 @@ const UserProfile: React.FC = React.memo(() => {
 
 UserProfile.displayName = 'UserProfile';
 export default UserProfile;
+
+const Container = styled.div`
+	padding: 45px;
+	box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
+	border-radius: 20px;
+`;
