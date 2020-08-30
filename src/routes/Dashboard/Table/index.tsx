@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 
 import { UserData } from '../../../db';
-import { Button, Table, Switch, message } from 'antd';
+import { Table, Switch, message } from 'antd';
 import paths from '../../paths';
 import { useHistory } from 'react-router-dom';
 import { useAsyncDispatch } from '../../../utils';
