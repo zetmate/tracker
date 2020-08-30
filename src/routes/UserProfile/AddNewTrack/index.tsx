@@ -56,8 +56,6 @@ const AddNewTimeTrack: React.FC<Props> = React.memo((props) => {
 			duration,
 		};
 
-		console.log('parsed', parsed);
-
 		onSubmit(parsed);
 	}, [onSubmit]);
 
@@ -88,7 +86,6 @@ const AddNewTimeTrack: React.FC<Props> = React.memo((props) => {
 				<TimePicker.RangePicker
 					format={ format }
 					minuteStep={ 15 }
-					defaultValue={ defaultTime }
 				/>
 			</Form.Item>
 
@@ -98,7 +95,7 @@ const AddNewTimeTrack: React.FC<Props> = React.memo((props) => {
 				name="label"
 				rules={ fieldRules }
 			>
-				<Select defaultValue="productive">
+				<Select>
 					<Select.Option value="productive">
 						Productive
 					</Select.Option>
