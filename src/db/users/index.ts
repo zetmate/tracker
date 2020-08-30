@@ -13,7 +13,7 @@ export const generateUsersIds = (): UsersIds => {
 	const numUsers = 10100;
 	const result = [];
 
-	for (let i = 0; i < numUsers; i++) {
+	for (let i = 1; i <= numUsers; i++) {
 		result.push(i);
 	}
 	return result;

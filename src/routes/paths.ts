@@ -3,7 +3,7 @@ const paths = {
 	login: '/login',
 	register: '/register',
 	dashboard: '/dashboard',
-	userProfile: '/user/:userId',
+	userProfile: '/users/:userId',
 };
 
 export default paths;

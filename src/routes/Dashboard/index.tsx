@@ -9,7 +9,7 @@ import { RootState } from '../../store';
 import { useAsyncDispatch } from '../../utils';
 import { api } from '../../actions';
 import Filter from './Filter';
-import Summary from './Summary';
+import { Summary } from '../common';
 
 const Dashboard: React.FC = React.memo(() => {
 	const asyncDispatch = useAsyncDispatch();

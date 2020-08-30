@@ -112,7 +112,7 @@ const setUserData = (data: UserData) => {
 			.request({
 				servicePath,
 				url: '/:userId',
-				method: 'GET',
+				method: 'POST',
 				urlParams: {
 					userId: _.toString(data.id),
 				},
@@ -125,6 +125,44 @@ const setUserData = (data: UserData) => {
 				},
 				() => {
 					dispatch(_setUserData({
+						state: 'error',
+						msg: 'Can not save user data',
+					}));
+				},
+			);
+	};
+};
+
+/*
+* Set user data
+* */
+export const GET_USER_DATA = 'GET_USER_DATA';
+
+const _getUserData = getAsyncActionCreator<UsersData>(GET_USER_DATA);
+
+const getUserData = (userId: number) => {
+	return (dispatch: Dispatch<AsyncAction<UsersData>>) => {
+		// Set pending
+		dispatch(_getUserData({ state: 'pending' }));
+
+		// Request data
+		return server
+			.request({
+				servicePath,
+				url: '/:userId',
+				method: 'GET',
+				urlParams: {
+					userId: _.toString(userId),
+				},
+			})
+			.then(
+				({ data }) => {
+					dispatch(_getUserData({
+						state: 'success',
+					}, data));
+				},
+				() => {
+					dispatch(_getUserData({
 						state: 'error',
 						msg: 'Can not save user data',
 					}));
@@ -171,9 +209,50 @@ const createTimeTrack = (data: TimeTrack) => {
 	};
 };
 
+/*
+* Get time track
+* */
+export const GET_USER_TIME_TRACKS = 'GET_USER_TIME_TRACKS';
+
+const _getUserTimeTracks
+	= getAsyncActionCreator<TimeTrack[]>(GET_USER_TIME_TRACKS);
+
+const getUserTimeTracks = (userId: number) => {
+	return (dispatch: Dispatch<AsyncAction<TimeTrack[]>>) => {
+		// Set pending
+		dispatch(_getUserTimeTracks({ state: 'pending' }));
+
+		// Request data
+		return server
+			.request({
+				servicePath,
+				url: '/:userId/time-tracks',
+				method: 'GET',
+				urlParams: {
+					userId: _.toString(userId),
+				},
+			})
+			.then(
+				({ data }) => {
+					dispatch(_getUserTimeTracks({
+						state: 'success',
+					}, data));
+				},
+				() => {
+					dispatch(_getUserTimeTracks({
+						state: 'error',
+						msg: 'Can not add new time track',
+					}));
+				},
+			);
+	};
+};
+
 export default {
 	signUp,
 	fetchUsers,
 	setUserData,
+	getUserData,
 	createTimeTrack,
+	getUserTimeTracks,
 };
