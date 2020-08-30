@@ -104,7 +104,7 @@ const UsersTable: React.FC<Props> = React.memo((props) => {
 
 	const columns = useMemo(() => (
 		getColumns(history, onIsEnabledChange)
-	), [history]);
+	), [history, onIsEnabledChange]);
 
 	return (
 		<Table

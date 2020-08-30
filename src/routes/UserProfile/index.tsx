@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { message } from 'antd';
@@ -11,11 +11,13 @@ import { useAsyncDispatch } from '../../utils';
 import Name from './Name';
 import { Summary, SummaryProps } from '../common';
 import { FlexCenter, FlexColumn } from '../../components/layout';
+import TracksTable from './TracksTable';
 
 const showError = () => message.error('Can not get user data');
 
 const UserProfile: React.FC = React.memo(() => {
 	const { userId } = useParams();
+	const [areTracksLoading, setAreTracksLoading] = useState<boolean>(true);
 
 	const { data, asyncState, timeTracks } = useSelector<RootState>(
 		(state: RootState) => state.user,
@@ -26,7 +28,11 @@ const UserProfile: React.FC = React.memo(() => {
 	// Fetch data on mount
 	useEffect(() => {
 		asyncDispatch(api.getUserData(userId)).catch(showError);
-		asyncDispatch(api.getUserTimeTracks(userId)).catch(showError);
+		asyncDispatch(api.getUserTimeTracks(userId))
+			.then(
+				() => setAreTracksLoading(false),
+				showError,
+			);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userId]);
 
@@ -62,6 +68,10 @@ const UserProfile: React.FC = React.memo(() => {
 				<FlexColumn flex="1 0 auto">
 					<Name onChange={ onNameChange } initial={ data.name } />
 					<Summary data={ total } />
+					<TracksTable
+						data={ timeTracks }
+						isLoading={ areTracksLoading }
+					/>
 				</FlexColumn>
 			</WithLoader>
 		</FlexCenter>

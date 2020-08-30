@@ -22,6 +22,7 @@ const timeTracks = (
 	action: AsyncAction<TimeTrack[]>,
 ): TimeTrack[] => {
 	const hasFetched = action?.asyncState?.state === 'success';
+	console.log('action', action);
 
 	if (action.type === GET_USER_TIME_TRACKS && hasFetched) {
 		return action.data;

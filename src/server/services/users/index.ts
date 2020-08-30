@@ -134,7 +134,24 @@ const usersService: Service = {
 						),
 					);
 			},
-			'GET': methodNotAllowed,
+			'GET'({ urlParams = {} }: RequestOptions): ReturnType<Request> {
+				const userId = urlParams.userId;
+
+				if (!userId) {
+					return rejectInvalidUserId(userId);
+				}
+
+				return db.getTimeTracksForUser(_.toNumber(userId))
+					.then(
+						data => (
+							new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ status: 200, data });
+								}, 300);
+							})
+						),
+					);
+			},
 			'PATCH': methodNotAllowed,
 			'PUT': methodNotAllowed,
 			'DELETE': methodNotAllowed,

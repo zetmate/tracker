@@ -62,12 +62,14 @@ const generateTracksForMonth = (
 	const startPoint = startFrom || numDaysByMonth[month];
 	const tracks: TimeTrack[] = [];
 
+	let trackId = id;
+
 	// some days are skipped fro performance reasons
 	let i = startPoint;
 	while (i > 0) {
 		const date = moment().month(month).day(i).format(dateFormat);
 
-		tracks.push(generateTrack(id, userId, date));
+		tracks.push(generateTrack(trackId++, userId, date));
 
 		const step = Math.round(Math.random() * 8 + 4);
 		i -= step;
@@ -82,15 +84,15 @@ export const generateTimeTracks = (usersIds: UsersIds): TimeTracksByUser => {
 	const day = date.day();
 	const month = date.month();
 
+	let id = 1;
 	return _.reduce(usersIds, (result, userId) => {
 		const tracks: TimeTrack[] = [];
-		let id = 1;
 
 		for (let i = month; i > 0; i--) {
 			const startDay = i === month ? day : null;
 
 			tracks.push(...generateTracksForMonth(id, userId, i, startDay));
-			id++;
+			id = tracks.length;
 
 			// We generate only last 2 month of the current year
 			if (month - i === 3) {

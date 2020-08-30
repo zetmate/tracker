@@ -28,7 +28,7 @@ const Summary: React.FC<SummaryProps> = React.memo(({ data }) => {
 		data.productivityRatio
 			? (
 				<Statistic
-					title="Total unproductive time"
+					title="Productivity ratio"
 					value={ data.productivityRatio }
 					precision={ 2 }
 				/>
