@@ -1,5 +1,15 @@
 import _ from 'lodash';
-import { UserData, UsersData } from '../../../db';
+import moment from 'moment';
+
+import {
+	dateFormat,
+	db,
+	TimeTrack,
+	TimeTracksByUser,
+	UserData,
+	UsersData,
+} from '../../../db';
+import { DateRange } from '../../../utils';
 
 const checkFilter = (pair: string, user: UserData): boolean => {
 	const separator = ':';
@@ -17,17 +27,85 @@ const checkFilter = (pair: string, user: UserData): boolean => {
 	return valueRegex.test(adaptedValue);
 };
 
-const checkFilters = (pairs: string[], user: UserData): boolean => (
+const checkSearchString = (pairs: string[], user: UserData): boolean => (
 	_.reduce(pairs, (result, pair) => (
 		result && checkFilter(pair, user)
 	), true)
 );
 
-export const filterUsersList = (
+const checkTimeTrack = (
+	timeTrack: TimeTrack,
+	dateRange: DateRange,
+): boolean => {
+	const [minDateStr, maxDateStr] = dateRange;
+
+	const minDate = moment(minDateStr, dateFormat);
+	const maxDate = moment(maxDateStr, dateFormat);
+	const trackDate = moment(timeTrack.date, dateFormat);
+
+	return (
+		trackDate.isSameOrAfter(minDate)
+		&& trackDate.isSameOrBefore(maxDate)
+	);
+};
+
+const getUserDataForDateRange = (
+	dateRange: DateRange,
+	userData: UserData,
+	timeTracks: TimeTrack[],
+): UserData => {
+	if (!timeTracks) {
+		return userData;
+	}
+	const initialData: UserData = {
+		...userData,
+		clockedTime: 0,
+		productiveTime: 0,
+		unproductiveTime: 0,
+	};
+
+	const filtered = _.reduce(timeTracks, (result, timeTrack) => {
+		// If doesn't satisfy condition
+		if (!checkTimeTrack(timeTrack, dateRange)) {
+			return result;
+		}
+
+		result.clockedTime += timeTrack.duration;
+
+		if (timeTrack.label === 'productive') {
+			result.productiveTime += timeTrack.duration;
+		} else {
+			result.unproductiveTime += timeTrack.duration;
+		}
+
+		return result;
+	}, initialData);
+
+	filtered.productivityRatio
+		= filtered.productiveTime / (filtered.unproductiveTime || 1);
+
+	return filtered;
+};
+
+export type FilterOptions = {
 	searchString: string,
-	data: UsersData,
-): UsersData => {
-	const pairs = searchString.split(',');
+	dateRangeString: string,
+	usersData: UsersData,
+}
+
+export const filterUsersList = (
+	{
+		searchString = '',
+		usersData,
+		dateRangeString = '',
+	}: FilterOptions,
+): Promise<UsersData> => {
+	const searchPair = searchString.split(',');
+	const dateRange = dateRangeString
+		? dateRangeString.split(':') as DateRange
+		: null;
+
+	console.log('daterangestr', dateRangeString);
 
 	const total: UsersData['total'] = {
 		clockedTime: 0,
@@ -36,16 +114,47 @@ export const filterUsersList = (
 		users: 0,
 	};
 
-	const content = _.filter(data.content, (user) => {
-		const isSuitable = checkFilters(pairs, user);
+	const timeTracksPromise: Promise<TimeTracksByUser> = (
+		new Promise(resolve => {
+			if (dateRangeString) {
+				db.getAllTimeTracksByUser()
+					.then(tracks => {
+						resolve(tracks);
+					});
+			} else {
+				resolve({});
+			}
+		})
+	);
 
-		if (isSuitable) {
-			total.clockedTime += user.clockedTime;
-			total.productiveTime += user.productiveTime;
-			total.unproductiveTime += user.unproductiveTime;
-		}
-		return isSuitable;
-	});
+	return timeTracksPromise
+		.then(
+			timeTracksByUser => {
+				return _.reduce(usersData.content, (result, user) => {
+					const isSuitable = searchString
+						? checkSearchString(searchPair, user)
+						: true
+					;
 
-	return { content, total };
+					if (isSuitable) {
+						const timeTracks = timeTracksByUser[user.id] || [];
+
+						const userData = dateRange
+							? getUserDataForDateRange(
+								dateRange, user, timeTracks,
+							)
+							: user;
+
+						total.clockedTime += userData.clockedTime;
+						total.productiveTime += userData.productiveTime;
+						total.unproductiveTime += userData.unproductiveTime;
+
+						result.push(userData);
+					}
+					return result;
+
+				}, [] as UsersData['content']);
+			},
+		)
+		.then(filteredContent => ({ content: filteredContent, total }));
 };

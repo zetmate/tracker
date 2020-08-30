@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -16,22 +15,35 @@ const checkIfDateDisabled = (date: moment.Moment): boolean => (
 	date.isAfter(moment())
 );
 
+const defaultMinDate = moment().subtract(1, 'year');
+
 const FilterByDateRange: React.FC<Props> = React.memo(({ onApply }) => {
 	const [range, setRange] = useState<Range>(null);
 
-	const isBtnDisabled = useMemo(() => (
-		_.isNil(range) || _.isNil(range[0]) || _.isNil(range[1])
+	const btnText = useMemo(() => (
+		range ? 'Apply date range' : 'Reset date range'
 	), [range]);
 
 	const onCalendarChange = useCallback((range: Range) => {
-		setRange(range);
+		setRange(range && [
+			range[0] || defaultMinDate,
+			range[1] || moment(),
+		]);
 	}, []);
 
 	const onBtnClick = useCallback(() => {
-		onApply([
-			range[0].format(dateFormat),
-			range[1].format(dateFormat),
-		]);
+		const formattedRange = range
+			? [
+				range[0].format(dateFormat),
+				range[1].format(dateFormat),
+			]
+			: null;
+
+		console.log('range', range);
+		console.log('formatted', formattedRange);
+
+		onApply(formattedRange as DateRange);
+
 	}, [range, onApply]);
 
 	return (
@@ -43,10 +55,9 @@ const FilterByDateRange: React.FC<Props> = React.memo(({ onApply }) => {
 			/>
 			<Button
 				type="primary"
-				disabled={ isBtnDisabled }
 				onClick={ onBtnClick }
 			>
-				Apply date range
+				{ btnText }
 			</Button>
 		</>
 	);

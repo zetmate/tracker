@@ -41,24 +41,29 @@ const usersService: Service = {
 			// Search param pattern: ?search=prop0:value0,prop1:value1
 			'GET'({ queryParams }): ReturnType<Request> {
 				const searchString = queryParams.search;
+				const dateRangeString = queryParams.dateRange;
 
 				return db.getAllUsersData()
 					.then(
-						usersData => {
-							const result = searchString
-								? filterUsersList(searchString, usersData)
-								: usersData
-							;
-
-							return new Promise(resolve => {
+						usersData => (
+							filterUsersList({
+								searchString,
+								dateRangeString,
+								usersData,
+							})
+						),
+					)
+					.then(
+						filteredData => (
+							new Promise(resolve => {
 								setTimeout(() => {
 									resolve({
 										status: 200,
-										data: result,
+										data: filteredData,
 									});
-								}, 1000);
-							});
-						},
+								}, 500);
+							})
+						),
 					);
 			},
 			'PATCH': methodNotAllowed,

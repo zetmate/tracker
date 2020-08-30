@@ -1,25 +1,40 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '../../../components/layout';
 import { Input } from 'antd';
 
-import { dashboard } from '../../../actions';
+import { dashboard, UsersFilter } from '../../../actions';
 import FilterByDateRange from './FilterByDateRange';
 import { DateRange } from '../../../utils';
 
 const searchStyle = { width: 300 };
 
 const Filter: React.FC = React.memo(() => {
+	const [filter, setFilter] = useState<UsersFilter>({});
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (!filter) {
+			return;
+		}
+		dispatch(dashboard.filterUsers(filter));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [filter]);
+
 	const onSearch = useCallback((value: string) => {
-		dispatch(dashboard.filterUsers({ name: value }));
-	}, [dispatch]);
+		setFilter({
+			...filter,
+			name: value,
+		});
+	}, [filter]);
 
 	const onApplyDateRange = useCallback((range: DateRange) => {
-		// TODO: dispatch action
-	}, []);
+		setFilter({
+			...filter,
+			dateRange: range,
+		});
+	}, [filter]);
 
 	return (
 		<Flex width="100%">
