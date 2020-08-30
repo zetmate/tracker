@@ -25,3 +25,5 @@ export function useAsyncDispatch<T>(): AsyncDispatch<T> {
 export const FormItemNoMargin = styled(Form.Item)`
 	margin: 0 !important;
 `;
+
+export type DateRange = [string, string]

@@ -1,3 +1,10 @@
+// My styles for normalization
 @import './reset.scss';
 @import './base.scss';
+
+// ANTD
 @import '~antd/dist/antd.css';
+
+// Date range picker
+@import '~react-date-range/dist/styles.css';
+@import '~react-date-range/dist/theme/default.css';

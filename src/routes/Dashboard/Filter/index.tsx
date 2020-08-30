@@ -1,32 +1,40 @@
-import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '../../../components/layout';
-import { Form, Input, Select } from 'antd';
-import { dashboard } from '../../../actions';
-import { FormItemNoMargin } from '../../../utils';
+import { Input } from 'antd';
+
+import { dashboard, UsersFilter } from '../../../actions';
+import FilterByDateRange from './FilterByDateRange';
+import { DateRange } from '../../../utils';
 
 const searchStyle = { width: 300 };
-const selectStyle = { width: 200 };
-
-type SelectOption = { value: string, title: string };
-const selectOptions: SelectOption[] = [
-	{ value: null, title: 'All time' },
-];
-
-const selectOptionsJSX = _.map(selectOptions, ({ value, title }) => (
-	<Select.Option value={ value } key={ title }>{ title }</Select.Option>
-));
-
-const formInitialValues = { period: null as SelectOption['value'] };
 
 const Filter: React.FC = React.memo(() => {
+	const [filter, setFilter] = useState<UsersFilter>({});
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (!filter) {
+			return;
+		}
+		dispatch(dashboard.filterUsers(filter));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [filter]);
+
 	const onSearch = useCallback((value: string) => {
-		dispatch(dashboard.filterUsers({ name: value }));
-	}, [dispatch]);
+		setFilter({
+			...filter,
+			name: value,
+		});
+	}, [filter]);
+
+	const onApplyDateRange = useCallback((range: DateRange) => {
+		setFilter({
+			...filter,
+			dateRange: range,
+		});
+	}, [filter]);
 
 	return (
 		<Flex width="100%">
@@ -36,20 +44,7 @@ const Filter: React.FC = React.memo(() => {
 				onSearch={ onSearch }
 				style={ searchStyle }
 			/>
-			<Flex justifyContent="flex-end" flex="1 0 auto">
-				<Form initialValues={ formInitialValues }>
-					<FormItemNoMargin
-						label="Period"
-						name="period"
-					>
-						<Select
-							style={ selectStyle }
-						>
-							{ selectOptionsJSX }
-						</Select>
-					</FormItemNoMargin>
-				</Form>
-			</Flex>
+			<FilterByDateRange onApply={ onApplyDateRange } />
 		</Flex>
 	);
 });

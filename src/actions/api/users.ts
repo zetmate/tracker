@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { AsyncAction } from '../../utils';
+import { AsyncAction, DateRange } from '../../utils';
 import { AuthData, TimeTrack, UserData, UsersData } from '../../db';
 import { Dispatch } from 'react';
 import server from '../../server';
@@ -44,20 +44,29 @@ const signUp = (data: AuthData) => {
 export const FETCH_USERS = 'FETCH_USERS';
 
 export type UsersFilter = {
-	name?: string
+	name?: string,
+	dateRange?: DateRange,
 }
 
 const parseFilterToQuery = (filter: UsersFilter) => {
-	const searchString = _.reduce(filter, (result, value, key) => (
+	// Search
+	const searchObj = filter.name ? { name: filter.name } : {};
+
+	const searchString = _.reduce(searchObj, (result, value, key) => (
 		`${ result ? `${ result },` : '' }${ key }:${ value }`
 	), '');
 
-	if (!searchString) {
-		return {};
-	}
+	const searchQuery = searchString ? { search: searchString } : {};
+
+	// DateRange
+	const dateRange = filter.dateRange;
+	const dateRangeQuery = dateRange
+		? { dateRange: `${ dateRange[0] }:${ dateRange[1] }` }
+		: {};
 
 	return {
-		search: searchString,
+		...searchQuery,
+		...dateRangeQuery,
 	};
 };
 

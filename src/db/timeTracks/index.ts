@@ -63,10 +63,14 @@ const generateTracksForMonth = (
 	const tracks: TimeTrack[] = [];
 
 	// some days are skipped fro performance reasons
-	for (let i = startPoint; i > 0; i -= 8) {
+	let i = startPoint;
+	while (i > 0) {
 		const date = moment().month(month).day(i).format(dateFormat);
 
 		tracks.push(generateTrack(id, userId, date));
+
+		const step = Math.round(Math.random() * 8 + 4);
+		i -= step;
 	}
 
 	return tracks;
