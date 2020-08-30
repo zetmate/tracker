@@ -146,6 +146,7 @@ export const filterUsersList = (
 						total.clockedTime += userData.clockedTime;
 						total.productiveTime += userData.productiveTime;
 						total.unproductiveTime += userData.unproductiveTime;
+						total.users++;
 
 						result.push(userData);
 					}

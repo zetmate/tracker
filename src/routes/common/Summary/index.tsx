@@ -1,15 +1,44 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlexRowBetween } from '../../../components/layout';
 import { Statistic } from 'antd';
-import { UsersData } from '../../../db';
 
-type Props = {
-	data: UsersData['total']
+export type SummaryProps = {
+	data: {
+		users?: number
+		clockedTime: number
+		productiveTime: number
+		unproductiveTime: number
+		productivityRatio?: number
+	}
 }
 
-const Summary: React.FC<Props> = React.memo(({ data }) => {
+const Summary: React.FC<SummaryProps> = React.memo(({ data }) => {
+	const usersStat = useMemo(() => (
+		data.users
+			? (
+				<Statistic
+					title="Total users"
+					value={ data.users }
+				/>
+			)
+			: null
+	), [data.users]);
+
+	const productivityStat = useMemo(() => (
+		data.productivityRatio
+			? (
+				<Statistic
+					title="Total unproductive time"
+					value={ data.productivityRatio }
+					precision={ 2 }
+				/>
+			)
+			: null
+	), [data.productivityRatio]);
+
 	return (
 		<FlexRowBetween>
+			{ usersStat }
 			<Statistic
 				title="Total clocked time"
 				value={ data.clockedTime }
@@ -25,6 +54,7 @@ const Summary: React.FC<Props> = React.memo(({ data }) => {
 				value={ data.unproductiveTime }
 				precision={ 2 }
 			/>
+			{ productivityStat }
 		</FlexRowBetween>
 	);
 });

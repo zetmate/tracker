@@ -1,13 +1,16 @@
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { message, Typography } from 'antd';
+import { message } from 'antd';
 import { api } from '../../actions';
 import { WithLoader } from '../../components';
 import { RootState } from '../../store';
 import { useParams } from 'react-router';
 import { useAsyncDispatch } from '../../utils';
+import Name from './Name';
+import { Summary, SummaryProps } from '../common';
+import { FlexCenter } from '../../components/layout';
 
 const showError = () => message.error('Can not get user data');
 
@@ -27,11 +30,7 @@ const UserProfile: React.FC = React.memo(() => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userId]);
 
-	const [name, setName] = useState<string>(null);
-
 	const onNameChange = useCallback((value: string) => {
-		setName(value);
-
 		asyncDispatch(api.setUserData({
 			...data,
 			name: value,
@@ -43,23 +42,29 @@ const UserProfile: React.FC = React.memo(() => {
 		;
 	}, [data, asyncDispatch]);
 
-	const titleConfig = useMemo(() => ({
-		onChange: onNameChange,
-	}), [onNameChange]);
+	const total: SummaryProps['data'] = useMemo(() => ({
+		clockedTime: data.clockedTime,
+		productiveTime: data.productiveTime,
+		unproductiveTime: data.unproductiveTime,
+		productivityRatio: data.productivityRatio,
+	}), [data]);
 
 	return (
-		<WithLoader
-			isLoading={
-				_.includes(
-					['initial', 'pending'],
-					asyncState.state,
-				)
-			}
-		>
-			<Typography.Title editable={ titleConfig }>
-				{ name || data.name }
-			</Typography.Title>
-		</WithLoader>
+		<FlexCenter height="100%">
+			<WithLoader
+				isLoading={
+					_.includes(
+						['initial', 'pending'],
+						asyncState.state,
+					)
+				}
+			>
+				<>
+					<Name onChange={ onNameChange } initial={ data.name } />
+					<Summary data={ total } />
+				</>
+			</WithLoader>
+		</FlexCenter>
 	);
 });
 
