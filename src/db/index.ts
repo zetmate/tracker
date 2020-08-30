@@ -130,25 +130,24 @@ export const initDb = (): Promise<any> => {
 	// Check if data already exists
 	return localforage.getItem(isInitializedKey)
 		.then(value => {
-			// if (value) {
-			// 	return value;
-			// }
+			if (value) {
+				return value;
+			}
 			// If no data found, set it
 			const data = generateData();
 
 			return (
-				localforage.clear()
-					.then(() => (
-						Promise
-							.all(_.map(data, (value, key) => (
-								localforage.setItem(key, value)
-							)))
-							.then(
-								() => (
-									localforage.setItem(isInitializedKey, true)
-								),
-							)
-					))
+				// localforage.clear()
+				// 	.then(() => (
+				Promise
+					.all(_.map(data, (value, key) => (
+						localforage.setItem(key, value)
+					)))
+					.then(
+						() => (
+							localforage.setItem(isInitializedKey, true)
+						),
+					)// ))
 			);
 		});
 };
