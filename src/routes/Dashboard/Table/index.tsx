@@ -27,8 +27,8 @@ const columns = [
 	},
 	{
 		title: 'Total time (h)',
-		key: 'totalTime',
-		dataIndex: 'totalTime',
+		key: 'clockedTime',
+		dataIndex: 'clockedTime',
 		render: getRenderNumber(1),
 	},
 	{

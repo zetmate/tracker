@@ -40,7 +40,7 @@ export const filterUsersList = (
 		const isSuitable = checkFilters(pairs, user);
 
 		if (isSuitable) {
-			total.clockedTime += user.totalTime;
+			total.clockedTime += user.clockedTime;
 			total.productiveTime += user.productiveTime;
 			total.unproductiveTime += user.unproductiveTime;
 		}

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
 	Service,
 	methodNotAllowed,
@@ -7,6 +9,19 @@ import {
 
 import { db } from '../../../db';
 import { filterUsersList } from './filter';
+
+const rejectInvalidUserId = (userId: string): ReturnType<Request> => {
+	console.error(
+		'[userData]: you must set a userId in urlParams',
+	);
+
+	return Promise.reject({
+		status: 400,
+		data: {
+			msg: `${ userId } is not a valid user id`,
+		},
+	});
+};
 
 const usersService: Service = {
 	baseUrl: '/users',
@@ -27,7 +42,7 @@ const usersService: Service = {
 			'GET'({ queryParams }): ReturnType<Request> {
 				const searchString = queryParams.search;
 
-				return db.getUsersData()
+				return db.getAllUsersData()
 					.then(
 						usersData => {
 							const result = searchString
@@ -46,6 +61,58 @@ const usersService: Service = {
 						},
 					);
 			},
+			'PATCH': methodNotAllowed,
+			'PUT': methodNotAllowed,
+			'DELETE': methodNotAllowed,
+		},
+		'/:userId': {
+			'PUT'(
+				{ data, urlParams = {} }: RequestOptions,
+			): ReturnType<Request> {
+				const userId = urlParams.userId;
+
+				if (!userId) {
+					return rejectInvalidUserId(userId);
+				}
+
+				return db.setDataForUser(_.toNumber(userId), data)
+					.then(
+						() => (
+							new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ status: 200 });
+								}, 300);
+							})
+						),
+					);
+			},
+			'PATCH': methodNotAllowed,
+			'POST': methodNotAllowed,
+			'GET': methodNotAllowed,
+			'DELETE': methodNotAllowed,
+		},
+		'/:userId/time-tracks': {
+			'POST'(
+				{ data, urlParams = {} }: RequestOptions,
+			): ReturnType<Request> {
+				const userId = urlParams.userId;
+
+				if (!userId) {
+					return rejectInvalidUserId(userId);
+				}
+
+				return db.setNewTimeTrackForUser(_.toNumber(userId), data)
+					.then(
+						() => (
+							new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ status: 201 });
+								}, 300);
+							})
+						),
+					);
+			},
+			'GET': methodNotAllowed,
 			'PATCH': methodNotAllowed,
 			'PUT': methodNotAllowed,
 			'DELETE': methodNotAllowed,
