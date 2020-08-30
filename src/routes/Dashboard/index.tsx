@@ -8,6 +8,7 @@ import { RootState } from '../../store';
 import { useAsyncDispatch } from '../../utils';
 import { api } from '../../actions';
 import Filter from './Filter';
+import Summary from './Summary';
 
 const Dashboard: React.FC = React.memo(() => {
 	const asyncDispatch = useAsyncDispatch();
@@ -30,6 +31,7 @@ const Dashboard: React.FC = React.memo(() => {
 	return (
 		<Container>
 			<Filter />
+			<Summary data={ usersData.total } />
 			<UsersTable
 				usersList={ usersData.content }
 				isLoading={ asyncState.state === 'pending' }
