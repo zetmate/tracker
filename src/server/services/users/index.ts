@@ -91,9 +91,26 @@ const usersService: Service = {
 						),
 					);
 			},
+			'GET'({ urlParams = {} }: RequestOptions): ReturnType<Request> {
+				const userId = urlParams.userId;
+
+				if (!userId) {
+					return rejectInvalidUserId(userId);
+				}
+
+				return db.getDataForUser(_.toNumber(userId))
+					.then(
+						data => (
+							new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ status: 200, data });
+								}, 300);
+							})
+						),
+					);
+			},
 			'PATCH': methodNotAllowed,
 			'POST': methodNotAllowed,
-			'GET': methodNotAllowed,
 			'DELETE': methodNotAllowed,
 		},
 		'/:userId/time-tracks': {

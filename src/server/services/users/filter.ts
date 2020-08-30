@@ -105,8 +105,6 @@ export const filterUsersList = (
 		? dateRangeString.split(':') as DateRange
 		: null;
 
-	console.log('daterangestr', dateRangeString);
-
 	const total: UsersData['total'] = {
 		clockedTime: 0,
 		productiveTime: 0,
@@ -148,6 +146,7 @@ export const filterUsersList = (
 						total.clockedTime += userData.clockedTime;
 						total.productiveTime += userData.productiveTime;
 						total.unproductiveTime += userData.unproductiveTime;
+						total.users++;
 
 						result.push(userData);
 					}

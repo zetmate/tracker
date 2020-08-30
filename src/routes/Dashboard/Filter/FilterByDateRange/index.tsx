@@ -39,9 +39,6 @@ const FilterByDateRange: React.FC<Props> = React.memo(({ onApply }) => {
 			]
 			: null;
 
-		console.log('range', range);
-		console.log('formatted', formattedRange);
-
 		onApply(formattedRange as DateRange);
 
 	}, [range, onApply]);

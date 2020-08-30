@@ -1,8 +1,10 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { UserData } from '../../../db';
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
+import paths from '../../paths';
+import { useHistory } from 'react-router-dom';
 
 type Props = {
 	usersList: UserData[],
@@ -19,7 +21,7 @@ const getRenderNumber = (numDigits: number) => (value: number | string) => {
 	return number.toFixed(numDigits);
 };
 
-const columns = [
+const getColumns = (history: ReturnType<typeof useHistory>) => [
 	{
 		title: 'Name',
 		key: 'name',
@@ -49,10 +51,29 @@ const columns = [
 		dataIndex: 'productivityRatio',
 		render: getRenderNumber(2),
 	},
+	{
+		title: 'See more details',
+		key: 'seeDetails',
+		render(text: string, record: UserData) {
+			const profileUrl = paths.userProfile
+				.replace(':userId', _.toString(record.id));
+
+			const onClick = () => history.replace(profileUrl);
+
+			return (
+				<Button type="link" onClick={ onClick }>
+					Profile
+				</Button>
+			);
+		},
+	},
 ];
 
 const UsersTable: React.FC<Props> = React.memo((props) => {
 	const { usersList, isLoading } = props;
+	const history = useHistory();
+
+	const columns = useMemo(() => getColumns(history), [history]);
 
 	return (
 		<Table

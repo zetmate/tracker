@@ -26,6 +26,20 @@ const defaultState: RootState = {
 		},
 		usersFilter: {},
 	},
+	user: {
+		asyncState: {
+			state: 'initial',
+		},
+		data: {
+			id: null,
+			name: null,
+			clockedTime: null,
+			productiveTime: null,
+			unproductiveTime: null,
+			productivityRatio: null,
+		},
+		timeTracks: [],
+	},
 };
 
 const store = createStore(

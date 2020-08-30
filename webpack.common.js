@@ -13,7 +13,6 @@ module.exports = {
 		lodash: ['lodash'],
 
 		// css
-		fonts: './src/styles/vendor/fonts.scss',
 		global: './src/styles/global/scss',
 
 		// app js
