@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Redirect, Route, RouteProps, Switch } from 'react-router';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { Dashboard, LoginForm, paths } from './routes';
@@ -51,7 +51,7 @@ const App: React.FC = React.memo(() => {
 	), []);
 
 	return (
-		<Router>
+		<Router basename={ paths.index }>
 			<ReduxProvider store={ store }>
 				<ScreenContext.Provider value={ screenInfo }>
 					<WithLoader isLoading={ !isDbReady }>
