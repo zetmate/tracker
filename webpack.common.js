@@ -20,7 +20,7 @@ module.exports = {
 	},
 
 	output: {
-		publicPath: '/',
+		publicPath: '',
 	},
 
 	module: {
