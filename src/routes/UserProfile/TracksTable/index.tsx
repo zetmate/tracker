@@ -13,6 +13,7 @@ const columns = [
 		title: 'Type',
 		key: 'type',
 		dataIndex: 'label',
+		render: (value: string) => _.capitalize(value),
 	},
 	{
 		title: 'Date',
