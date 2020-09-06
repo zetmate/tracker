@@ -124,32 +124,28 @@ class DataBase implements IDataBase {
 
 export const db = new DataBase();
 
-export const initDb = (): Promise<any> => {
+export const initDb = async (): Promise<any> => {
 	const isInitializedKey = 'isDbInitialized';
 
 	// Check if data already exists
-	return localforage.getItem(isInitializedKey)
-		.then(value => {
-			if (value) {
-				return value;
-			}
-			// If no data found, set it
-			const data = generateData();
+	const isInitialized = await localforage.getItem(isInitializedKey);
 
-			return (
-				// localforage.clear()
-				// 	.then(() => (
-				Promise
-					.all(_.map(data, (value, key) => (
-						localforage.setItem(key, value)
-					)))
-					.then(
-						() => (
-							localforage.setItem(isInitializedKey, true)
-						),
-					)// ))
-			);
-		});
+	if (isInitialized) {
+		return Promise.resolve();
+	}
+	const data = generateData();
+
+	await localforage.clear();
+
+	await Promise.all(
+		_.map(data, (value, key) => (
+			localforage.setItem(key, value)
+		)),
+	);
+
+	await localforage.setItem(isInitializedKey, true);
+
+	return Promise.resolve();
 };
 
 export * from './types';
