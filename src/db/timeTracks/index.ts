@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import moment from 'moment';
 import {
 	dateFormat,
@@ -83,7 +82,7 @@ export const generateTimeTracks = (usersIds: UsersIds): TimeTracksByUser => {
 	const month = date.month();
 
 	let id = 1;
-	return _.reduce(usersIds, (result, userId) => {
+	return usersIds.reduce((result, userId) => {
 		const tracks: TimeTrack[] = [];
 
 		for (let i = month - 1; i > 0; i--) {

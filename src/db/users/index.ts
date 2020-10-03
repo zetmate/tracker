@@ -28,7 +28,7 @@ type UserTimeData = {
 const parseUserTimeFromTracks = (
 	userTracks: TimeTrack[],
 ): UserTimeData => (
-	_.reduce(userTracks, (result, track) => {
+	userTracks.reduce((result, track) => {
 		const clockedTime = result.clockedTime + track.duration;
 		const updatedResult = {
 			...result,
@@ -62,7 +62,7 @@ export const generateUsersData = (
 	};
 
 	const users: UsersDataByUser['content'] = (
-		_.reduce(usersIds, (result, id) => {
+		usersIds.reduce((result, id) => {
 			const tracks = (
 				_.get(timeTracks, getKeyForUserTracks(id)) || []
 			) as TimeTrack[];

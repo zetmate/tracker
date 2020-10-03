@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import localforage from 'localforage';
 import { generateUsersData, generateUsersIds } from './users';
 import { TimeTrack, TimeTracksByUser, UserData, UsersData } from './types';
@@ -59,7 +58,7 @@ class DataBase implements IDataBase {
 	getAllUsersData(): Promise<UsersData> {
 		const result = { content: [] } as UsersData;
 
-		const promises = _.map(usersIds, userId => (
+		const promises = usersIds.map(userId => (
 			this.getDataForUser(userId)
 				.then(
 					(userData: UserData) => {
@@ -107,7 +106,7 @@ class DataBase implements IDataBase {
 	getAllTimeTracksByUser(): Promise<TimeTracksByUser> {
 		const result = {} as TimeTracksByUser;
 
-		const promises = _.map(usersIds, userId => (
+		const promises = usersIds.map(userId => (
 			this.getTimeTracksForUser(userId)
 				.then(
 					(userTracks: TimeTrack[]) => (
@@ -137,11 +136,17 @@ export const initDb = async (): Promise<any> => {
 
 	await localforage.clear();
 
-	await Promise.all(
-		_.map(data, (value, key) => (
-			localforage.setItem(key, value)
-		)),
-	);
+	const requests: Promise<any>[] = [];
+
+	for (const key in data) {
+		if (!Object.prototype.hasOwnProperty.call(data, key)) {
+			continue;
+		}
+		const value = data[key];
+		requests.push(localforage.setItem(key, value));
+	}
+
+	await Promise.all(requests);
 
 	await localforage.setItem(isInitializedKey, true);
 
