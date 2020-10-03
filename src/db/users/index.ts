@@ -10,7 +10,7 @@ import {
 import { getKeyForUser, getKeyForUserTracks } from '../keys';
 
 export const generateUsersIds = (): UsersIds => {
-	const numUsers = 10100;
+	const numUsers = 101;
 	const result = [];
 
 	for (let i = 1; i <= numUsers; i++) {
